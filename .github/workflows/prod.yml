@@ -18,7 +18,7 @@ jobs:
       - name: Create env file
         run: |
           cat > .env << EOF
-          ${{ secrets.QA_ENV }}
+          ${{ secrets.PROD_ENV }}
           EOF
       - name: docker build
         run: docker build -t backend-prod .
@@ -35,7 +35,7 @@ jobs:
           fi
       
       - name: Docker start 
-        run: docker run -d --name backend-prod-c -p 3001:3000 backend-prod
+        run: docker run -d --name backend-prod-c -p 3002:3000 backend-prod
 
       - name: Docker show logs 
         run: sleep 50 && docker logs backend-prod-c
