@@ -33,7 +33,7 @@ jobs:
           fi
       
       - name: Docker start 
-        run: docker run -d --name backend-qa-c -p 3002:3005 backend-qa
+        run: docker run -d --name backend-qa-c -p 3005:3005 backend-qa
 
       - name: Docker show logs 
         run: sleep 50 && docker logs backend-qa-c
