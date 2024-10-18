@@ -43,6 +43,7 @@ exports.fetchAllInvoices = (condition, search, options) => {
               $or: [
                 { id: { $regex: search, $options: "i" } }, // Search by invoice ID
                 { 'toDetails.name': { $regex: search, $options: 'i' } }, // Search by client name
+                { 'toDetails.email': { $regex: search, $options: 'i' } }, // Search by client email
               ],
             },
           },
