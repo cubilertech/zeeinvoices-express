@@ -20,7 +20,9 @@ exports.getAll = async (req, res) => {
       skip,
       limit: Number(limit),
     });
-    handleResponse(res, 200, "All Records", result);
+    const total = await Service.count({ user_id: userFound?._id });
+
+    handleResponse(res, 200, "All Records", { ...result, total: total });
   } catch (err) {
     handleError(res, err);
   }
@@ -47,8 +49,8 @@ exports.getInvoicesByClient = async (req, res) => {
       throw new Error("ID is required");
     }
     const records = await Service.findAll({ to: new mongoose.Types.ObjectId(id) }, search, {
-      skip,
-      limit: Number(limit),
+        skip,
+        limit: Number(limit),
     });
     handleResponse(res, 200, "All Records", records);
   } catch (err) {
@@ -195,7 +197,7 @@ exports.create = async (req, res) => {
         req.file.path
       );
     }
-    
+
     // const lastRecord = await Service.lastRecord();
     // if(lastRecord && lastRecord?.id >= data.id){
     //   data.id = lastRecord.id + 1;
@@ -203,7 +205,6 @@ exports.create = async (req, res) => {
     const record = await Service.create({ ...data, user_id: userFound?._id });
     handleResponse(res, 200, "Your invoice is successfully saved", record);
   } catch (err) {
-    
     // if (err.code === 11000) {
     //   let retryCount = req.retryCount || 0;
     //   if (retryCount < 3) {  // retry limit
@@ -213,10 +214,10 @@ exports.create = async (req, res) => {
     //     handleError(res, err);
     //   }
     // } else {
-      if (err.code === 11000) {
-        err.message = "Another invoice already exist with same reference.";
-      }
-      handleError(res, err);
+    if (err.code === 11000) {
+      err.message = "Another invoice already exist with same reference.";
+    }
+    handleError(res, err);
     // }
   }
 };
