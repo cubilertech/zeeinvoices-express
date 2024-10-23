@@ -95,7 +95,7 @@ exports.update = async (req, res) => {
       data.image = "";
     }
     const record = await Service.update({ _id:id }, data);
-    handleResponse(res, 200, "Record Updated", record);
+    handleResponse(res, 200, "Your Invoice has been updated successfully", record);
   } catch (err) {
     if (err.code === 11000) {
       err.message = "Another invoice already exist with same reference.";
@@ -204,7 +204,7 @@ exports.create = async (req, res) => {
     //   data.id = lastRecord.id + 1;
     // }
     const record = await Service.create({ ...data, user_id: userFound?._id });
-    handleResponse(res, 200, "Your invoice is successfully saved", record);
+    handleResponse(res, 200, "Your Invoice has been saved successfully", record);
   } catch (err) {
     
     // if (err.code === 11000) {

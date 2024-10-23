@@ -53,7 +53,7 @@ exports.update = async (req, res) => {
   const data = { ...req.body };
   try {
     const record = await Service.update({ _id: id }, data);
-    handleResponse(res, 200, "Record Updated", record);
+    handleResponse(res, 200, "Recipients Details Has been updated successfully", record);
   } catch (err) {
     handleError(res, err);
   }
@@ -64,11 +64,11 @@ exports.deleteSingle = async (req, res) => {
 
     const invoiceExists = await InvoiceService.count({ to: id });
     if (invoiceExists) {
-      return handleResponse(res, 400, "Cannot delete client. It is referenced in invoices.");
+      return handleResponse(res, 400, "Cannot delete Recipient. It is referenced in invoices.");
     }
 
     const record = await Service.delete({ _id: id });
-    handleResponse(res, 200, "Client deleted successfully", record);
+    handleResponse(res, 200, "Recipient deleted successfully", record);
   } catch (err) {
     handleError(res, err);
   }
@@ -82,10 +82,10 @@ exports.create = async (req, res) => {
       throw new Error("Invalid user.");
     }
     const record = await Service.create({ ...data, user_id: userFound?._id });
-    handleResponse(res, 200, "Client is successfully saved", record);
+    handleResponse(res, 200, "Recipient Added Successfully", record);
   } catch (err) {
     if (err.code === 11000) {
-      err.message = "Another client already exists with the same email.";
+      err.message = "Another Recipient already exists with the same email.";
     }
     handleError(res, err);
   }
