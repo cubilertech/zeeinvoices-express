@@ -203,9 +203,9 @@ exports.create = async (req, res) => {
     // if(lastRecord && lastRecord?.id >= data.id){
     //   data.id = lastRecord.id + 1;
     // }
-    // const record = await Service.create({ ...data, user_id: userFound?._id });
-    console.log("code")
-    handleResponse(res, 200, "Your Invoice has been saved successfully", {});
+    const record = await Service.create({ ...data, user_id: userFound?._id });
+ 
+    handleResponse(res, 200, "Your Invoice has been saved successfully", record);
 
   } catch (err) {
     console.log("code error")
