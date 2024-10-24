@@ -203,10 +203,12 @@ exports.create = async (req, res) => {
     // if(lastRecord && lastRecord?.id >= data.id){
     //   data.id = lastRecord.id + 1;
     // }
-    const record = await Service.create({ ...data, user_id: userFound?._id });
-    handleResponse(res, 200, "Your Invoice has been saved successfully", record);
+    // const record = await Service.create({ ...data, user_id: userFound?._id });
+    console.log("code")
+    handleResponse(res, 200, "Your Invoice has been saved successfully", {});
+
   } catch (err) {
-    
+    console.log("code error")
     // if (err.code === 11000) {
     //   let retryCount = req.retryCount || 0;
     //   if (retryCount < 3) {  // retry limit
