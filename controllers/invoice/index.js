@@ -119,7 +119,7 @@ exports.deleteSingle = async (req, res) => {
       );
     }
 
-    handleResponse(res, 200, "Invoice deleted successfully", record);
+    handleResponse(res, 200, "Your Invoice has been deleted successfully", record);
   } catch (err) {
     handleError(res, err);
   }
