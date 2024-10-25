@@ -5,7 +5,7 @@ const invoiceSchema = new mongoose.Schema(
     id: {
       type: String,
       required: "Invoice id is required",
-      unique: true,
+      // unique: true,
     },
     image: {
       type: String,
@@ -54,5 +54,5 @@ const invoiceSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
+invoiceSchema.index({ id: 1, user_id: 1 }, { unique: true });
 module.exports = mongoose.model("invoices", invoiceSchema);

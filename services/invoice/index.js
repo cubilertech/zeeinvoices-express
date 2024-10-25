@@ -1,7 +1,20 @@
 const Invoice = require("../../models/invoice");
 const { fetchAllInvoices , fetchSingleInvoice } = require("../../utils/pipelines");
 class InvoiceService {
-  static findAll(condition, search, options) {
+  static findAll(condition) {
+    return new Promise((resolve,reject) => {
+      Invoice.find(condition)
+        .sort({ createdAt: -1 })
+        .exec()
+        .then((result) => {
+          resolve(result);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    })
+  }
+  static findAllWithPipeline(condition, search, options) {
     return new Promise((resolve, reject) => {
       const pipeline = fetchAllInvoices(condition, search, options);
       Invoice.aggregate(pipeline)
@@ -32,13 +45,11 @@ class InvoiceService {
     });
   }
 
-  static lastRecord(data) {
+  static exist(condition) {
     return new Promise((resolve, reject) => {
-      Invoice.findOne(data)
-        .sort({ createdAt: -1 })
-        .exec()
-        .then((record) => {
-          resolve(record);
+      Invoice.exists(condition)
+        .then((result) => {
+          resolve(result);
         })
         .catch((err) => {
           reject(err);

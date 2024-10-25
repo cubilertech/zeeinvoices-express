@@ -6,6 +6,8 @@ const ClientService = require("../../services/client");
 const { multerActions, multerSource } = require("../../utils/constant");
 const { handleError, handleResponse } = require("../../utils/responses");
 const { default: mongoose } = require("mongoose");
+const { incrementInvoiceId } = require("../../utils/common");
+const InvoiceService = require("../../services/invoice");
 
 exports.getAll = async (req, res) => {
   const user = req.user;
@@ -16,13 +18,12 @@ exports.getAll = async (req, res) => {
     if (!userFound) {
       throw new Error("Invalid user.");
     }
-    const result = await Service.findAll({ user_id: userFound?._id }, search, {
+    const result = await Service.findAllWithPipeline({ user_id: userFound?._id }, search, {
       skip,
       limit: Number(limit),
     });
     const total = await Service.count({ user_id: userFound?._id });
-
-    handleResponse(res, 200, "All Records", { ...result, total: total });
+    handleResponse(res, 200, "All Records", {...result, total});
   } catch (err) {
     handleError(res, err);
   }
@@ -48,9 +49,9 @@ exports.getInvoicesByClient = async (req, res) => {
     if (!id) {
       throw new Error("ID is required");
     }
-    const records = await Service.findAll({ to: new mongoose.Types.ObjectId(id) }, search, {
-        skip,
-        limit: Number(limit),
+    const records = await Service.findAllWithPipeline({ to: new mongoose.Types.ObjectId(id) }, search, {
+      skip,
+      limit: Number(limit),
     });
     handleResponse(res, 200, "All Records", records);
   } catch (err) {
@@ -94,7 +95,7 @@ exports.update = async (req, res) => {
       data.image = "";
     }
     const record = await Service.update({ _id:id }, data);
-    handleResponse(res, 200, "Record Updated", record);
+    handleResponse(res, 200, "Your Invoice has been updated successfully", record);
   } catch (err) {
     if (err.code === 11000) {
       err.message = "Another invoice already exist with same reference.";
@@ -118,7 +119,7 @@ exports.deleteSingle = async (req, res) => {
       );
     }
 
-    handleResponse(res, 200, "Invoice deleted successfully", record);
+    handleResponse(res, 200, "Your Invoice has been deleted successfully", record);
   } catch (err) {
     handleError(res, err);
   }
@@ -203,8 +204,11 @@ exports.create = async (req, res) => {
     //   data.id = lastRecord.id + 1;
     // }
     const record = await Service.create({ ...data, user_id: userFound?._id });
-    handleResponse(res, 200, "Your invoice is successfully saved", record);
+ 
+    handleResponse(res, 200, "Your Invoice has been saved successfully", record);
+
   } catch (err) {
+    console.log("code error")
     // if (err.code === 11000) {
     //   let retryCount = req.retryCount || 0;
     //   if (retryCount < 3) {  // retry limit
@@ -222,15 +226,50 @@ exports.create = async (req, res) => {
   }
 };
 
-exports.getlastRecord = async (req, res) => {
-  try {
-    let newId = 1;
-    const record = await Service.lastRecord();
-    if (record) {
-      newId = record.id + 1;
+// exports.getlastRecord = async (req, res) => {
+//   try {
+//     let newId = 1;
+//     const record = await Service.lastRecord();
+//     if (record) {
+//       newId = record.id + 1;
+//     }
+//     handleResponse(res, 200, "Latest Id", newId);
+//   } catch (err) {
+//     handleError(res, err);
+//   }
+// };
+
+exports.getNewInvoiceId = async (req, res) => {
+  const user = req?.user;
+  try{
+    const userFound = await UserService.findBy({ email: user?.email });
+    if (!userFound) {
+      throw new Error("Invalid user.");
     }
-    handleResponse(res, 200, "Latest Id", newId);
-  } catch (err) {
-    handleError(res, err);
+    const invoicesExist = await InvoiceService.findAll({user_id:userFound?._id});
+    if(invoicesExist?.length > 0){
+      const newInvoiceId = await generateUniqueInvoiceId(invoicesExist[0]?.id,userFound?._id);
+      return handleResponse(res,200,'Invoice ID',newInvoiceId);
+    }
+   handleResponse(res,200,'Invoice ID','AB0001')
   }
-};
+  catch(err){
+    handleError(res,err);
+  }
+}
+
+async function generateUniqueInvoiceId(existingInvoiceId, user_id) {
+  let newInvoiceId = incrementInvoiceId(existingInvoiceId);
+  let isUnique = false;
+  // Continue incrementing and checking uniqueness until a unique ID is found
+  while (!isUnique) {
+      const invoiceExists = await InvoiceService.exist({ id: newInvoiceId, user_id: user_id});
+      if (!invoiceExists) {
+          isUnique = true;
+      } else {
+          // If the ID already exists, increment again
+          newInvoiceId = incrementInvoiceId(newInvoiceId);
+      }
+  }
+  return newInvoiceId;
+}

@@ -70,7 +70,7 @@ exports.update = async (req, res) => {
       delete data.user_id;
     }
     const record = await Service.update({ _id: id , user_id: userFound?._id }, data);
-    handleResponse(res, 200, "Record Updated", record);
+    handleResponse(res, 200, "Sender Details Has been updated successfully", record);
   } catch (err) {
     handleError(res, err);
   }
@@ -104,7 +104,7 @@ exports.create = async (req, res) => {
       throw new Error("Invalid Loggedin user.");
     }
     const record = await Service.create({ ...data, user_id: userFound?._id });
-    handleResponse(res, 200, "Sender is successfully saved", record);
+    handleResponse(res, 200, "Sender Added Successfully", record);
   } catch (err) {
     if (err.code === 11000) {
       err.message = "Another sender already exists with the same email.";

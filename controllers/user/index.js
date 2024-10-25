@@ -40,7 +40,7 @@ exports.updateMy = async (req, res) => {
       );
     }
     const record = await Service.update({ email: user?.email }, data);
-    handleResponse(res, 200, "Record Updated", record);
+    handleResponse(res, 200, "Your Profile has been updated successfully", record);
   } catch (err) {
     handleError(res, err);
   }
