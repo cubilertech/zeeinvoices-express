@@ -5,7 +5,7 @@ const invoiceSchema = new mongoose.Schema(
     id: {
       type: String,
       required: "Invoice id is required",
-      unique: true,
+      // unique: true,
     },
     image: {
       type: String,
