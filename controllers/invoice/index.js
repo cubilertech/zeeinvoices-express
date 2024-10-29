@@ -58,6 +58,24 @@ exports.getInvoicesByClient = async (req, res) => {
     handleError(res, err);
   }
 };
+exports.getInvoicesBySender = async (req, res) => {
+  let { id } = req.params;
+  const { page = 1, limit = 10, search = "" } = req.query; // Added search query
+  const skip = (page - 1) * limit;
+  try {
+    if (!id) {
+      throw new Error("ID is required");
+    }
+    const records = await Service.findAllWithPipeline({ from: new mongoose.Types.ObjectId(id) }, search, {
+      skip,
+      limit: Number(limit),
+    });
+    handleResponse(res, 200, "All Records", records);
+  }
+  catch(err){
+    handleError(res,err);
+  }
+}
 exports.update = async (req, res) => {
   const { id } = req.params;
   const data = { ...req.body };
