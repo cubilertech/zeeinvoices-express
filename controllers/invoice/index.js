@@ -35,7 +35,7 @@ exports.getSingle = async (req, res) => {
       throw new Error("ID is required");
     }
     // id = parseInt(id);
-    const record = await Service.findBy({ id: id });
+    const record = await Service.findByWithPipeline({ id: id });
     handleResponse(res, 200, "Single Record", record);
   } catch (err) {
     handleError(res, err);
