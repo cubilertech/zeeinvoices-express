@@ -68,6 +68,8 @@ exports.fetchAllInvoices = (condition, search, options) => {
               settings: 1,
               notes: 1,
               status: 1,
+              fromDetails: 1,
+              toDetails: 1
               // fromDetails: { $ifNull: ['$fromDetails', null] },
               // toDetails: { $ifNull: ['$toDetails', null] }, 
             },
@@ -138,6 +140,8 @@ exports.fetchSingleInvoice = (condition) => {
         settings: 1,
         notes: 1,
         status: 1,
+        fromDetails:1,
+        toDetails:1
         // fromDetails: { $ifNull: ['$fromDetails', null] },
         // toDetails: { $ifNull: ['$toDetails', null] }, 
       },
