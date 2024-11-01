@@ -96,13 +96,13 @@ exports.update = async (req, res) => {
       const newFrom = JSON.parse(data?.from);
         const resp = await addOrUpdateInvoiceSenderOrReceipient(newFrom,SenderService,oldRecord.user_id);
         data.from = resp.ref;
-        data.fromDetail = resp.detail
+        data.fromDetails = resp.detail
       }
       if (data?.to) {
         const newTo = JSON.parse(data?.to);
         const resp = await addOrUpdateInvoiceSenderOrReceipient(newTo,ClientService,oldRecord.user_id);
         data.to = resp.ref;
-        data.toDetail = resp.detail
+        data.toDetails = resp.detail
       }
 
     if (req.file && req.file.fieldname === "image") {
@@ -173,13 +173,13 @@ exports.create = async (req, res) => {
       const newFrom = JSON.parse(data?.from);
         const resp = await addOrUpdateInvoiceSenderOrReceipient(newFrom,SenderService,userFound._id);
         data.from = resp.ref;
-        data.fromDetail = resp.detail
+        data.fromDetails = resp.detail
       }
       if (data?.to) {
         const newTo = JSON.parse(data?.to);
         const resp = await addOrUpdateInvoiceSenderOrReceipient(newTo,ClientService,userFound._id);
         data.to = resp.ref;
-        data.toDetail = resp.detail
+        data.toDetails = resp.detail
       }
 
     if (req.file && req.file.fieldname === "image") {

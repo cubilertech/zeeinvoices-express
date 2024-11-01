@@ -25,11 +25,11 @@ const invoiceSchema = new mongoose.Schema(
       ref: "clients",  // Defining relation with Sender document
       required: "Client field is required",
     },
-    fromDetail: {
+    fromDetails: {
       type: mongoose.Schema.Types.Mixed,
       default: null
     },
-    toDetail:{
+    toDetails:{
       type: mongoose.Schema.Types.Mixed,
       default: null
     },
