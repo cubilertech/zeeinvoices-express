@@ -34,5 +34,5 @@ const senderSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-senderSchema.index({ email: 1 }, { unique: true });
+senderSchema.index({ email: 1, user_id: 1 }, { unique: true });
 module.exports = mongoose.model("senders", senderSchema);
