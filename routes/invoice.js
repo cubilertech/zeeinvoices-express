@@ -7,6 +7,7 @@ const {
   create,
   getNewInvoiceId,
   getInvoicesByClient,
+  getInvoicesBySender
 } = require("../controllers/invoice");
 const { upload } = require("../services/multer");
 const authMiddleware = require("../middlewares/authentication");
@@ -15,6 +16,7 @@ const router = express.Router();
 router.get("/", authMiddleware, getAll);
 router.get("/last-record", authMiddleware, getNewInvoiceId);
 router.get("/by-client/:id", authMiddleware, getInvoicesByClient);
+router.get("/by-sender/:id", authMiddleware, getInvoicesBySender);
 router.get("/:id", getSingle);
 router.put("/:id", authMiddleware, upload.single("image"), update);
 router.delete("/:id", authMiddleware, deleteSingle);
