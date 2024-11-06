@@ -2,6 +2,7 @@ const Service = require("../../services/user");
 const { addOrUpdateOrDelete } = require("../../services/multer");
 const { multerActions, multerSource } = require("../../utils/constant");
 const { handleError, handleResponse } = require("../../utils/responses");
+const SendGridService = require("../../services/sendGrid");
 
 exports.getAll = async (req, res) => {
   try {
@@ -40,7 +41,12 @@ exports.updateMy = async (req, res) => {
       );
     }
     const record = await Service.update({ email: user?.email }, data);
-    handleResponse(res, 200, "Your Profile has been updated successfully", record);
+    handleResponse(
+      res,
+      200,
+      "Your Profile has been updated successfully",
+      record
+    );
   } catch (err) {
     handleError(res, err);
   }
@@ -49,10 +55,12 @@ exports.updateMy = async (req, res) => {
 exports.create = async (req, res) => {
   const data = { ...req.body };
   try {
-    console.log(data.email,'data');
+    console.log(data.email, "data");
     const recordFound = await Service.findBy({ email: data?.email });
-    console.log(recordFound,'record');
+    console.log(recordFound, "record");
     if (!recordFound) {
+      const html = accountCreatedTemplate();
+      await SendGridService.sendEmail(data.email, "User Created", html);
       const record = await Service.create(data);
       handleResponse(res, 200, "Record Created", record);
     } else {

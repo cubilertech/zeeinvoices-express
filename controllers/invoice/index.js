@@ -8,6 +8,8 @@ const { handleError, handleResponse } = require("../../utils/responses");
 const { default: mongoose } = require("mongoose");
 const { incrementInvoiceId } = require("../../utils/common");
 const InvoiceService = require("../../services/invoice");
+const { inoviceCreatedTemplate, inoviceCreatedToFromTemplate } = require("../../templates/email");
+const SendGridService = require("../../services/sendGrid");
 
 exports.getAll = async (req, res) => {
   const user = req.user;
@@ -18,12 +20,16 @@ exports.getAll = async (req, res) => {
     if (!userFound) {
       throw new Error("Invalid user.");
     }
-    const result = await Service.findAllWithPipeline({ user_id: userFound?._id }, search, {
-      skip,
-      limit: Number(limit),
-    });
+    const result = await Service.findAllWithPipeline(
+      { user_id: userFound?._id },
+      search,
+      {
+        skip,
+        limit: Number(limit),
+      }
+    );
     const total = await Service.count({ user_id: userFound?._id });
-    handleResponse(res, 200, "All Records", {...result, total});
+    handleResponse(res, 200, "All Records", { ...result, total });
   } catch (err) {
     handleError(res, err);
   }
@@ -49,10 +55,14 @@ exports.getInvoicesByClient = async (req, res) => {
     if (!id) {
       throw new Error("ID is required");
     }
-    const records = await Service.findAllWithPipeline({ to: new mongoose.Types.ObjectId(id) }, search, {
-      skip,
-      limit: Number(limit),
-    });
+    const records = await Service.findAllWithPipeline(
+      { to: new mongoose.Types.ObjectId(id) },
+      search,
+      {
+        skip,
+        limit: Number(limit),
+      }
+    );
     handleResponse(res, 200, "All Records", records);
   } catch (err) {
     handleError(res, err);
@@ -66,20 +76,23 @@ exports.getInvoicesBySender = async (req, res) => {
     if (!id) {
       throw new Error("ID is required");
     }
-    const records = await Service.findAllWithPipeline({ from: new mongoose.Types.ObjectId(id) }, search, {
-      skip,
-      limit: Number(limit),
-    });
+    const records = await Service.findAllWithPipeline(
+      { from: new mongoose.Types.ObjectId(id) },
+      search,
+      {
+        skip,
+        limit: Number(limit),
+      }
+    );
     handleResponse(res, 200, "All Records", records);
+  } catch (err) {
+    handleError(res, err);
   }
-  catch(err){
-    handleError(res,err);
-  }
-}
+};
 exports.update = async (req, res) => {
   const { id } = req.params;
   const data = { ...req.body };
- 
+
   if (data?.settings) {
     data.settings = JSON.parse(data?.settings);
   }
@@ -87,23 +100,31 @@ exports.update = async (req, res) => {
     data.items = JSON.parse(data?.items);
   }
   try {
-    const oldRecord = await Service.findBy({ _id:id });
+    const oldRecord = await Service.findBy({ _id: id });
     if (!oldRecord) {
       throw new Error("Invalid invoice id.");
     }
 
     if (data?.from) {
       const newFrom = JSON.parse(data?.from);
-        const resp = await addOrUpdateInvoiceSenderOrReceipient(newFrom,SenderService,oldRecord.user_id);
-        data.from = resp.ref;
-        data.fromDetails = resp.detail
-      }
-      if (data?.to) {
-        const newTo = JSON.parse(data?.to);
-        const resp = await addOrUpdateInvoiceSenderOrReceipient(newTo,ClientService,oldRecord.user_id);
-        data.to = resp.ref;
-        data.toDetails = resp.detail
-      }
+      const resp = await addOrUpdateInvoiceSenderOrReceipient(
+        newFrom,
+        SenderService,
+        oldRecord.user_id
+      );
+      data.from = resp.ref;
+      data.fromDetails = resp.detail;
+    }
+    if (data?.to) {
+      const newTo = JSON.parse(data?.to);
+      const resp = await addOrUpdateInvoiceSenderOrReceipient(
+        newTo,
+        ClientService,
+        oldRecord.user_id
+      );
+      data.to = resp.ref;
+      data.toDetails = resp.detail;
+    }
 
     if (req.file && req.file.fieldname === "image") {
       data.image = await addOrUpdateOrDelete(
@@ -124,8 +145,13 @@ exports.update = async (req, res) => {
       }
       data.image = "";
     }
-    const record = await Service.update({ _id:id }, data);
-    handleResponse(res, 200, "Your Invoice has been updated successfully", record);
+    const record = await Service.update({ _id: id }, data);
+    handleResponse(
+      res,
+      200,
+      "Your Invoice has been updated successfully",
+      record
+    );
   } catch (err) {
     if (err.code === 11000) {
       err.message = "Another invoice already exist with same reference.";
@@ -149,14 +175,19 @@ exports.deleteSingle = async (req, res) => {
       );
     }
 
-    handleResponse(res, 200, "Your Invoice has been deleted successfully", record);
+    handleResponse(
+      res,
+      200,
+      "Your Invoice has been deleted successfully",
+      record
+    );
   } catch (err) {
     handleError(res, err);
   }
 };
 exports.create = async (req, res) => {
   const user = req.user;
-  const data = { ...req.body };  
+  const data = { ...req.body };
   if (data?.settings) {
     data.settings = JSON.parse(data?.settings);
   }
@@ -169,18 +200,32 @@ exports.create = async (req, res) => {
       throw new Error("Invalid user.");
     }
 
-      if (data?.from) {
+    if (data?.from) {
       const newFrom = JSON.parse(data?.from);
-        const resp = await addOrUpdateInvoiceSenderOrReceipient(newFrom,SenderService,userFound._id);
-        data.from = resp.ref;
-        data.fromDetails = resp.detail
-      }
-      if (data?.to) {
-        const newTo = JSON.parse(data?.to);
-        const resp = await addOrUpdateInvoiceSenderOrReceipient(newTo,ClientService,userFound._id);
-        data.to = resp.ref;
-        data.toDetails = resp.detail
-      }
+      const resp = await addOrUpdateInvoiceSenderOrReceipient(
+        newFrom,
+        SenderService,
+        userFound._id
+      );
+      data.from = resp.ref;
+      data.fromDetails = resp.detail;
+
+      const html = inoviceCreatedToFromTemplate();
+      await SendGridService.sendEmail(newFrom.email, "Invoice Created", html);
+    }
+    if (data?.to) {
+      const newTo = JSON.parse(data?.to);
+      const resp = await addOrUpdateInvoiceSenderOrReceipient(
+        newTo,
+        ClientService,
+        userFound._id
+      );
+      data.to = resp.ref;
+      data.toDetails = resp.detail;
+
+      const html = inoviceCreatedToFromTemplate();
+      await SendGridService.sendEmail(newTo.email, "Invoice Created", html);
+    }
 
     if (req.file && req.file.fieldname === "image") {
       data.image = await addOrUpdateOrDelete(
@@ -189,13 +234,19 @@ exports.create = async (req, res) => {
         req.file.path
       );
     }
-    
-    const record = await Service.create({ ...data, user_id: userFound?._id });
- 
-    handleResponse(res, 200, "Your Invoice has been saved successfully", record);
 
+
+
+    const record = await Service.create({ ...data, user_id: userFound?._id });
+
+    handleResponse(
+      res,
+      200,
+      "Your Invoice has been saved successfully",
+      record
+    );
   } catch (err) {
-    console.log("code error")
+    console.log("code error");
     // if (err.code === 11000) {
     //   let retryCount = req.retryCount || 0;
     //   if (retryCount < 3) {  // retry limit
@@ -205,10 +256,10 @@ exports.create = async (req, res) => {
     //     handleError(res, err);
     //   }
     // } else {
-      if (err.code === 11000) {
-        err.message = "Another invoice already exist with same reference.";
-      }
-      handleError(res, err);
+    if (err.code === 11000) {
+      err.message = "Another invoice already exist with same reference.";
+    }
+    handleError(res, err);
     // }
   }
 };
@@ -228,35 +279,42 @@ exports.create = async (req, res) => {
 
 exports.getNewInvoiceId = async (req, res) => {
   const user = req?.user;
-  try{
+  try {
     const userFound = await UserService.findBy({ email: user?.email });
     if (!userFound) {
       throw new Error("Invalid user.");
     }
-    const invoicesExist = await InvoiceService.findAll({user_id:userFound?._id});
-    if(invoicesExist?.length > 0){
-      const newInvoiceId = await generateUniqueInvoiceId(invoicesExist[0]?.id,userFound?._id);
-      return handleResponse(res,200,'Invoice ID',newInvoiceId);
+    const invoicesExist = await InvoiceService.findAll({
+      user_id: userFound?._id,
+    });
+    if (invoicesExist?.length > 0) {
+      const newInvoiceId = await generateUniqueInvoiceId(
+        invoicesExist[0]?.id,
+        userFound?._id
+      );
+      return handleResponse(res, 200, "Invoice ID", newInvoiceId);
     }
-   handleResponse(res,200,'Invoice ID','AB0001')
+    handleResponse(res, 200, "Invoice ID", "AB0001");
+  } catch (err) {
+    handleError(res, err);
   }
-  catch(err){
-    handleError(res,err);
-  }
-}
+};
 
 async function generateUniqueInvoiceId(existingInvoiceId, user_id) {
   let newInvoiceId = incrementInvoiceId(existingInvoiceId);
   let isUnique = false;
   // Continue incrementing and checking uniqueness until a unique ID is found
   while (!isUnique) {
-      const invoiceExists = await InvoiceService.exist({ id: newInvoiceId, user_id: user_id});
-      if (!invoiceExists) {
-          isUnique = true;
-      } else {
-          // If the ID already exists, increment again
-          newInvoiceId = incrementInvoiceId(newInvoiceId);
-      }
+    const invoiceExists = await InvoiceService.exist({
+      id: newInvoiceId,
+      user_id: user_id,
+    });
+    if (!invoiceExists) {
+      isUnique = true;
+    } else {
+      // If the ID already exists, increment again
+      newInvoiceId = incrementInvoiceId(newInvoiceId);
+    }
   }
   return newInvoiceId;
 }
@@ -282,5 +340,22 @@ const addOrUpdateInvoiceSenderOrReceipient = async (data, Service, userId) => {
     return resp;
   } catch (err) {
     throw new Error(`Failed to add or update sender/recipient: ${err.message}`);
+  }
+};
+
+exports.sendEmailInvoice = async (req, res) => {
+  // const user = req.user;
+  try {
+    const html = inoviceCreatedTemplate();
+    await SendGridService.sendEmail(
+      "eng.mirza.rehman@gmail.com",
+      "Invoice Created",
+      html,
+      "Invoice Created"
+    );
+
+    handleResponse(res, 200, "Invoice ID", "AB0001");
+  } catch (err) {
+    handleError(res, err);
   }
 };

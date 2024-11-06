@@ -7,7 +7,8 @@ const {
   create,
   getNewInvoiceId,
   getInvoicesByClient,
-  getInvoicesBySender
+  getInvoicesBySender,
+  sendEmailInvoice,
 } = require("../controllers/invoice");
 const { upload } = require("../services/multer");
 const authMiddleware = require("../middlewares/authentication");
@@ -21,5 +22,6 @@ router.get("/:id", getSingle);
 router.put("/:id", authMiddleware, upload.single("image"), update);
 router.delete("/:id", authMiddleware, deleteSingle);
 router.post("/save", authMiddleware, upload.single("image"), create);
+router.post("/email", sendEmailInvoice);
 
 module.exports = router;
