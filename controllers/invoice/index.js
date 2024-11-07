@@ -209,9 +209,13 @@ exports.create = async (req, res) => {
       );
       data.from = resp.ref;
       data.fromDetails = resp.detail;
-
       const html = inoviceCreatedToFromTemplate();
-      await SendGridService.sendEmail(newFrom.email, "Invoice Created", html);
+      SendGridService.sendEmail(newFrom.email, "Invoice Created", html, "Invoice Created");
+
+      // if (!emailSent) {
+      //   console.error("Failed to send email to the 'from' address.");
+      //   // return handleError(res, new Error("Failed to send email to the sender address."));
+      // }
     }
     if (data?.to) {
       const newTo = JSON.parse(data?.to);
@@ -222,9 +226,13 @@ exports.create = async (req, res) => {
       );
       data.to = resp.ref;
       data.toDetails = resp.detail;
-
       const html = inoviceCreatedToFromTemplate();
-      await SendGridService.sendEmail(newTo.email, "Invoice Created", html);
+      SendGridService.sendEmail(newTo.email, "Invoice Created", html,"Invoice Created");
+
+      // if (!emailSent) {
+      //   console.error("Failed to send email to the 'to' address.");
+      //   // return handleError(res, new Error("Failed to send email to the recipient address."));
+      // }
     }
 
     if (req.file && req.file.fieldname === "image") {
@@ -246,7 +254,7 @@ exports.create = async (req, res) => {
       record
     );
   } catch (err) {
-    console.log("code error");
+    console.log("code error",err);
     // if (err.code === 11000) {
     //   let retryCount = req.retryCount || 0;
     //   if (retryCount < 3) {  // retry limit

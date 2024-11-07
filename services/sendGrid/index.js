@@ -2,30 +2,27 @@ const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const DOMAIN = process.env.DOMAIN;
-// const mailgun = new Mailgun(formData);
-// const client = mailgun.client({ username: "api", key: API_KEY });
+
 class SendGridService {
-  static sendEmail(to, subject, html = "<p>Hi</p>", text = "") {
+  static async sendEmail(to, subject, html = "<p>Hi</p>", text = "Default Text") {
     const messageData = {
-      from: DOMAIN,
+      from: DOMAIN || "muhammadwaqas3447@gmail.com", // Use environment variable for DOMAIN
       to: to,
       subject: subject,
       html: html,
       text: text,
     };
+
     try {
-      return sgMail.send(messageData);
+    
+      await sgMail.send(messageData);; // Indicate email was sent successfully
     } catch (error) {
       console.error("Error sending email:", error);
+      if (error.response) {
+        console.error("SendGrid response error:", error.response.body.errors);
+      }
     }
   }
-  //   static verifyEmail(email) {
-  //     try {
-  //       return client.validate.get(email, { provider_lookup: false });
-  //     } catch (error) {
-  //       console.error("Error verifying email:", error);
-  //     }
-  //   }
 }
 
 module.exports = SendGridService;
