@@ -60,7 +60,7 @@ exports.create = async (req, res) => {
     console.log(recordFound, "record");
     if (!recordFound) {
       const html = accountCreatedTemplate();
-      await SendGridService.sendEmail(data.email, "User Created", html);
+      SendGridService.sendEmail(data.email, "User Created", html,"Invoice Created");
       const record = await Service.create(data);
       handleResponse(res, 200, "Record Created", record);
     } else {

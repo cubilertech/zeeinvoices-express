@@ -211,11 +211,6 @@ exports.create = async (req, res) => {
       data.fromDetails = resp.detail;
       const html = inoviceCreatedToFromTemplate();
       SendGridService.sendEmail(newFrom.email, "Invoice Created", html, "Invoice Created");
-
-      // if (!emailSent) {
-      //   console.error("Failed to send email to the 'from' address.");
-      //   // return handleError(res, new Error("Failed to send email to the sender address."));
-      // }
     }
     if (data?.to) {
       const newTo = JSON.parse(data?.to);
@@ -228,11 +223,6 @@ exports.create = async (req, res) => {
       data.toDetails = resp.detail;
       const html = inoviceCreatedToFromTemplate();
       SendGridService.sendEmail(newTo.email, "Invoice Created", html,"Invoice Created");
-
-      // if (!emailSent) {
-      //   console.error("Failed to send email to the 'to' address.");
-      //   // return handleError(res, new Error("Failed to send email to the recipient address."));
-      // }
     }
 
     if (req.file && req.file.fieldname === "image") {
