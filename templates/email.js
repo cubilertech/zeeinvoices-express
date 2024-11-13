@@ -107,7 +107,7 @@ exports.accountInactiveTemplate = (data) => {
 }
 
 exports.emailInvoiceToClient = (sender,client,invoice) => {
-  retrun `<div style="background-color: #F2F2F7; padding-top: 48px;padding-bottom: 48px; padding-right: 60px; padding-left: 60px">
+  return `<div style="background-color: #F2F2F7; padding-top: 48px;padding-bottom: 48px; padding-right: 60px; padding-left: 60px">
 <img style="height:32px" src="https://zeeinvoices.com/Images/logos/zee-logo.png" alt="zeeinvoices">
 <p style="font-family: Arial;font-size: 28px; line-height: 36px; font-weight:400; color: #4F5A68;">Dear ${client?.name},</p>
 

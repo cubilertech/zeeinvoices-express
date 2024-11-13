@@ -195,6 +195,9 @@ exports.create = async (req, res) => {
   if (data?.items) {
     data.items = JSON.parse(data?.items);
   }
+  if(data?.designation){
+    data.signature.designation = data.designation;
+  }
   try {
     const userFound = await UserService.findBy({ email: user?.email });
     if (!userFound) {
@@ -236,15 +239,31 @@ exports.create = async (req, res) => {
       );
     }
 
-    if (req.file && req.file.fieldname === "image") {
+    // if (req.file && req.file.fieldname === "image") {
+    //   data.image = await addOrUpdateOrDelete(
+    //     multerActions.SAVE,
+    //     multerSource.INVOICES,
+    //     req.file.path
+    //   );
+    // }
+
+    // Check if `image` file exists
+    if (req.files && req.files['image'] && req.files['image'][0]) {
       data.image = await addOrUpdateOrDelete(
         multerActions.SAVE,
         multerSource.INVOICES,
-        req.file.path
+        req.files['image'][0].path
       );
     }
 
-
+    // Check if `signatureImage` file exists
+    if (req.files && req.files['signatureImage'] && req.files['signatureImage'][0]) {
+      data.signature.image = await addOrUpdateOrDelete(
+        multerActions.SAVE,
+        multerSource.INVOICES,
+        req.files['signatureImage'][0].path
+      );
+    }   
 
     const record = await Service.create({ ...data, user_id: userFound?._id });
 
@@ -368,3 +387,22 @@ const addOrUpdateInvoiceSenderOrReceipient = async (data, Service, userId) => {
 //     handleError(res, err);
 //   }
 // };
+
+exports.modifyExistingDocuments = async (req,res)=>{
+  try{ 
+   const result = await Service.updateMany(
+     { 
+      signature: { $exists: false },
+     },
+     { 
+        $set: { 
+           signature: null 
+        }
+     }
+  );
+   handleResponse(res,200,"Records modified",result);
+  }
+  catch(err){
+   handleError(res,err);
+  }
+}

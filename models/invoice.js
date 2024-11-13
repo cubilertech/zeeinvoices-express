@@ -48,6 +48,10 @@ const invoiceSchema = new mongoose.Schema(
     settings: {
       type: mongoose.Schema.Types.Mixed,
     },
+    signature: {
+      type: mongoose.Schema.Types.Mixed,
+      default:null
+    },
     notes: {
       type: String,
     },
