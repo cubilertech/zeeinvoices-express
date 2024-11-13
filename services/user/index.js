@@ -41,6 +41,18 @@ class UserService {
     });
   }
 
+  static updateMany(condition, data) {
+    return new Promise((resolve, reject) => {
+      User.updateMany(condition, data)
+        .then(() => {
+          resolve(true);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+
   static delete(condition) {
     return new Promise((resolve, reject) => {
       User.findOneAndDelete(condition)

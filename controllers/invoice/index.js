@@ -8,8 +8,9 @@ const { handleError, handleResponse } = require("../../utils/responses");
 const { default: mongoose } = require("mongoose");
 const { incrementInvoiceId } = require("../../utils/common");
 const InvoiceService = require("../../services/invoice");
-const { inoviceCreatedTemplate, inoviceCreatedToFromTemplate } = require("../../templates/email");
-const SendGridService = require("../../services/sendGrid");
+const { inoviceCreatedTemplate, inoviceCreatedToFromTemplate, emailInvoiceToClient, emailInvoiceToSender } = require("../../templates/email");
+// const SendGridService = require("../../services/sendGrid");
+const NodemailerService = require("../../services/nodemailer");
 
 exports.getAll = async (req, res) => {
   const user = req.user;
@@ -199,7 +200,7 @@ exports.create = async (req, res) => {
     if (!userFound) {
       throw new Error("Invalid user.");
     }
-
+    const invoiceTotal = data.items.reduce((sum,item)=>sum+=item.subTotal,0);
     if (data?.from) {
       const newFrom = JSON.parse(data?.from);
       const resp = await addOrUpdateInvoiceSenderOrReceipient(
@@ -209,8 +210,13 @@ exports.create = async (req, res) => {
       );
       data.from = resp.ref;
       data.fromDetails = resp.detail;
-      const html = inoviceCreatedToFromTemplate();
-      SendGridService.sendEmail(newFrom.email, "Invoice Created", html, "Invoice Created");
+      const html = emailInvoiceToSender(data.fromDetails);
+      // SendGridService.sendEmail(newFrom.email, "Invoice Created", html, "Invoice Created");
+      await NodemailerService.sendEmail(
+        newFrom.email,
+        "Your Invoice Has Been Created",
+        html,
+      );
     }
     if (data?.to) {
       const newTo = JSON.parse(data?.to);
@@ -221,8 +227,13 @@ exports.create = async (req, res) => {
       );
       data.to = resp.ref;
       data.toDetails = resp.detail;
-      const html = inoviceCreatedToFromTemplate();
-      SendGridService.sendEmail(newTo.email, "Invoice Created", html,"Invoice Created");
+      const html = emailInvoiceToClient(data.fromDetails,data.toDetails,{id:data.id,total:invoiceTotal});
+      // SendGridService.sendEmail(newTo.email, "Invoice Created", html,"Invoice Created");
+      await NodemailerService.sendEmail(
+        newTo.email,
+        `You've Received an Invoice from ${data.fromDetails?.name}`,
+        html,
+      );
     }
 
     if (req.file && req.file.fieldname === "image") {
@@ -341,19 +352,19 @@ const addOrUpdateInvoiceSenderOrReceipient = async (data, Service, userId) => {
   }
 };
 
-exports.sendEmailInvoice = async (req, res) => {
-  // const user = req.user;
-  try {
-    const html = inoviceCreatedTemplate();
-    await SendGridService.sendEmail(
-      "eng.mirza.rehman@gmail.com",
-      "Invoice Created",
-      html,
-      "Invoice Created"
-    );
+// exports.sendEmailInvoice = async (req, res) => {
+//   // const user = req.user;
+//   try {
+//     const html = inoviceCreatedTemplate();
+//     await SendGridService.sendEmail(
+//       "eng.mirza.rehman@gmail.com",
+//       "Invoice Created",
+//       html,
+//       "Invoice Created"
+//     );
 
-    handleResponse(res, 200, "Invoice ID", "AB0001");
-  } catch (err) {
-    handleError(res, err);
-  }
-};
+//     handleResponse(res, 200, "Invoice ID", "AB0001");
+//   } catch (err) {
+//     handleError(res, err);
+//   }
+// };
