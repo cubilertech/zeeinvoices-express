@@ -21,7 +21,9 @@ return `<div style="background-color: #F2F2F7; padding-top: 48px;padding-bottom:
 
 <p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">ZeeInvoices is designed to make invoicing simple, seamless, and stress-free. Whether you're a freelancer, a small business owner, or managing a team, we're here to help you get paid faster with professional invoices in just a few clicks.</p>
 
-<input type="submit" style="font-size: 16px; line-height: 24px; font-weight:700;background-color: #4F35DF; color: white; border: none; border-radius: 4px; padding-top: 12px;padding-bottom: 12px; padding-right: 48px; padding-left: 48px" value="Sign In & Create Your Invoice">
+<a href="https://zeeinvoices.com" target="_blank">
+<button style="font-size: 16px; line-height: 24px; font-weight:700;background-color: #4F35DF; color: white; border: none; border-radius: 4px; padding-top: 12px;padding-bottom: 12px; padding-right: 48px; padding-left: 48px" >Sign In & Create Your Invoice</button>
+</a>
 
 <p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">Click below to sign in and create your first invoice – it's quick and easy!Welcome aboard and happy invoicing!</p>
 
