@@ -189,6 +189,7 @@ exports.deleteSingle = async (req, res) => {
 exports.create = async (req, res) => {
   const user = req.user;
   const data = { ...req.body };
+  let signature = {};
   if (data?.settings) {
     data.settings = JSON.parse(data?.settings);
   }
@@ -196,7 +197,7 @@ exports.create = async (req, res) => {
     data.items = JSON.parse(data?.items);
   }
   if(data?.designation){
-    data.signature.designation = data.designation;
+    signature.designation = data.designation;
   }
   try {
     const userFound = await UserService.findBy({ email: user?.email });
@@ -215,11 +216,11 @@ exports.create = async (req, res) => {
       data.fromDetails = resp.detail;
       const html = emailInvoiceToSender(data.fromDetails);
       // SendGridService.sendEmail(newFrom.email, "Invoice Created", html, "Invoice Created");
-      await NodemailerService.sendEmail(
-        newFrom.email,
-        "Your Invoice Has Been Created",
-        html,
-      );
+      // await NodemailerService.sendEmail(
+      //   newFrom.email,
+      //   "Your Invoice Has Been Created",
+      //   html,
+      // );
     }
     if (data?.to) {
       const newTo = JSON.parse(data?.to);
@@ -232,11 +233,11 @@ exports.create = async (req, res) => {
       data.toDetails = resp.detail;
       const html = emailInvoiceToClient(data.fromDetails,data.toDetails,{id:data.id,total:invoiceTotal});
       // SendGridService.sendEmail(newTo.email, "Invoice Created", html,"Invoice Created");
-      await NodemailerService.sendEmail(
-        newTo.email,
-        `You've Received an Invoice from ${data.fromDetails?.name}`,
-        html,
-      );
+      // await NodemailerService.sendEmail(
+      //   newTo.email,
+      //   `You've Received an Invoice from ${data.fromDetails?.name}`,
+      //   html,
+      // );
     }
 
     // if (req.file && req.file.fieldname === "image") {
@@ -258,14 +259,14 @@ exports.create = async (req, res) => {
 
     // Check if `signatureImage` file exists
     if (req.files && req.files['signatureImage'] && req.files['signatureImage'][0]) {
-      data.signature.image = await addOrUpdateOrDelete(
+      signature.image = await addOrUpdateOrDelete(
         multerActions.SAVE,
         multerSource.INVOICES,
         req.files['signatureImage'][0].path
       );
     }   
 
-    const record = await Service.create({ ...data, user_id: userFound?._id });
+    const record = await Service.create({ ...data,signature, user_id: userFound?._id });
 
     handleResponse(
       res,
