@@ -214,13 +214,6 @@ exports.create = async (req, res) => {
       );
       data.from = resp.ref;
       data.fromDetails = resp.detail;
-      const html = emailInvoiceToSender(data.fromDetails);
-      // SendGridService.sendEmail(newFrom.email, "Invoice Created", html, "Invoice Created");
-      // await NodemailerService.sendEmail(
-      //   newFrom.email,
-      //   "Your Invoice Has Been Created",
-      //   html,
-      // );
     }
     if (data?.to) {
       const newTo = JSON.parse(data?.to);
@@ -231,13 +224,6 @@ exports.create = async (req, res) => {
       );
       data.to = resp.ref;
       data.toDetails = resp.detail;
-      const html = emailInvoiceToClient(data.fromDetails,data.toDetails,{id:data.id,total:invoiceTotal});
-      // SendGridService.sendEmail(newTo.email, "Invoice Created", html,"Invoice Created");
-      // await NodemailerService.sendEmail(
-      //   newTo.email,
-      //   `You've Received an Invoice from ${data.fromDetails?.name}`,
-      //   html,
-      // );
     }
 
     // if (req.file && req.file.fieldname === "image") {
@@ -267,6 +253,20 @@ exports.create = async (req, res) => {
     }   
 
     const record = await Service.create({ ...data,signature, user_id: userFound?._id });
+
+      const senderTemplate = emailInvoiceToSender(data.fromDetails);
+      await NodemailerService.sendEmail(
+        data.fromDetails.email,
+        "Your Invoice Has Been Created",
+        senderTemplate,
+      );
+      const recepientTemplate = emailInvoiceToClient(data.fromDetails,data.toDetails,{id:data.id,total:invoiceTotal});
+
+      await NodemailerService.sendEmail(
+        data.toDetails.email,
+        `You've Received an Invoice from ${data.fromDetails?.name}`,
+        recepientTemplate,
+      );
 
     handleResponse(
       res,
