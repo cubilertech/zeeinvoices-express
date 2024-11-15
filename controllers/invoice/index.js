@@ -11,7 +11,7 @@ const InvoiceService = require("../../services/invoice");
 const { inoviceCreatedTemplate, inoviceCreatedToFromTemplate, emailInvoiceToClient, emailInvoiceToSender } = require("../../templates/email");
 // const SendGridService = require("../../services/sendGrid");
 const NodemailerService = require("../../services/nodemailer");
-
+const path = require('path');
 exports.getAll = async (req, res) => {
   const user = req.user;
   const { page = 1, limit = 10, search = "" } = req.query; // Added search query
@@ -151,10 +151,11 @@ exports.update = async (req, res) => {
     }
 
     if (req.files && req.files['signatureImage'] && req.files['signatureImage'][0]) {
+      const filePath = req.files['signatureImage'][0].path;
       data.signature.image = await addOrUpdateOrDelete(
         multerActions.PUT,
         multerSource.INVOICES,
-        req.files['signatureImage'][0].path,
+        path.basename(filePath),
         oldRecord?.signature?.image
       );
     }
