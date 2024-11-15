@@ -100,6 +100,9 @@ exports.update = async (req, res) => {
   if (data?.items) {
     data.items = JSON.parse(data?.items);
   }
+  if (data?.signature) {
+    data.signature = JSON.parse(data?.signature);
+  }
   try {
     const oldRecord = await Service.findBy({ _id: id });
     if (!oldRecord) {
