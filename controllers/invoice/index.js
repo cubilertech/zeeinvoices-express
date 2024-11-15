@@ -127,11 +127,11 @@ exports.update = async (req, res) => {
       data.toDetails = resp.detail;
     }
 
-    if (req.file && req.file.fieldname === "image") {
+    if (req.files && req.files['image'] && req.files['image'][0]) {
       data.image = await addOrUpdateOrDelete(
         multerActions.PUT,
         multerSource.INVOICES,
-        req.file.filename,
+        req.files['image'][0].path,
         oldRecord.image
       );
     }
@@ -146,6 +146,27 @@ exports.update = async (req, res) => {
       }
       data.image = "";
     }
+
+    if (req.files && req.files['signatureImage'] && req.files['signatureImage'][0]) {
+      data.signature.image = await addOrUpdateOrDelete(
+        multerActions.PUT,
+        multerSource.INVOICES,
+        req.files['signatureImage'][0].path,
+        oldRecord?.signature?.image
+      );
+    }
+    if (data?.signatureImage === "no-image") {
+      if (oldRecord?.signature?.image) {
+        console.log("only remove image");
+        await addOrUpdateOrDelete(
+          multerActions.DELETE,
+          multerSource.INVOICES,
+          oldRecord?.signature?.image
+        );
+      }
+      data.signature.image = "";
+    }
+
     const record = await Service.update({ _id: id }, data);
     handleResponse(
       res,
@@ -173,6 +194,13 @@ exports.deleteSingle = async (req, res) => {
         multerActions.DELETE,
         multerSource.INVOICES,
         record.image
+      );
+    }
+    if(record && record.signature.image && record.signature.image?.startsWith("images/invoices/uploads")){
+      await addOrUpdateOrDelete(
+        multerActions.DELETE,
+        multerSource.INVOICES,
+        record.signature.image
       );
     }
 
@@ -204,7 +232,7 @@ exports.create = async (req, res) => {
     if (!userFound) {
       throw new Error("Invalid user.");
     }
-    const invoiceTotal = data.items.reduce((sum,item)=>sum+=item.subTotal,0);
+    // const invoiceTotal = data.items.reduce((sum,item)=>sum+=item.subTotal,0);
     if (data?.from) {
       const newFrom = JSON.parse(data?.from);
       const resp = await addOrUpdateInvoiceSenderOrReceipient(
