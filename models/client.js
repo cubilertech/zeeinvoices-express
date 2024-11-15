@@ -27,6 +27,10 @@ const clientSchema = new mongoose.Schema(
     address: {
       type: String,
     },
+    lastPromotionalEmailSentOn: {
+      type: Date,
+      default: null,
+    },
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
       required: "User reference is required",

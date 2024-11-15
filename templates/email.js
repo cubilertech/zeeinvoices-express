@@ -193,3 +193,57 @@ exports.emailInvoiceToSender = (sender) => {
  
 </div>`;
 }
+
+exports.approachingRecepientEmail = (data) => {
+  return `<div style="background-color: #F2F2F7; padding-top: 48px;padding-bottom: 48px; padding-right: 60px; padding-left: 60px">
+<img style="height:32px" src="https://zeeinvoices.com/Images/logos/zee-logo.png" alt="zeeinvoices">
+<p style="font-family: Arial;font-size: 28px; line-height: 36px; font-weight:400; color: #4F5A68;">Hi ${data?.name},</p>
+<p style="font-family: Arial;font-size: 40px; line-height: 44px; font-weight:700; color: #4F5A68;">Say Goodbye to Complex Invoicing – Welcome to Zeeinvoices!</p>
+
+<p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">We noticed that you often create business invoices using various platforms. We understand how time-consuming and complex managing invoices can be. That’s why we’re excited to introduce you to Zeeinvoices – the platform designed to simplify your invoicing process.</p>
+
+<p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:700; color: #4F5A68">With Zeeinvoices, you can:</p>
+
+<ul>
+  <li><p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">Create professional invoices quickly and effortlessly</p></li>
+  <li><p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">Streamline your business operations in one place</p></li>
+  <li><p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">Manage payments and keep track of your financials with ease</p></li>
+</ul>
+
+<p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">Thousands of professionals, freelancers, and businesses already use Zeeinvoices to make invoicing a seamless part of their workflow.</p>
+
+<p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:700; color: #4F5A68">Ready to Simplify Your Invoicing?</p>
+
+<input type="submit" style="font-size: 16px; line-height: 24px; font-weight:700;background-color: #4F35DF; color: white; border: none; border-radius: 4px; padding-top: 12px;padding-bottom: 12px; padding-right: 48px; padding-left: 48px" value="Learn More & Get Started">
+
+<p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">We’d love to help you take control of your invoicing and make it a breeze.</p>
+
+<p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">Looking forward to welcoming you on board!</p>
+
+<p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">Warm regards,</p>
+<p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">The ZeeInvoices Team</p>
+
+<div style="margin-top:60px;padding-top: 48px;padding-bottom: 48px; border-top: 1px solid #D4D5D6"> <!-- bottom section -->
+
+<p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A6899">You’re receiving this email because you signed up for ZeeInvoices. If you no longer wish to receive these emails, you can unsubscribe <span><a href="#" style="color: #4B5565">here</a></span>.</p>
+
+<div style="display: flex; flex-direction: row; justify-content: space-between"> <!-- footer section -->
+
+<p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A6899">© 2024 ZeeInvoices. All rights reserved.</p>
+<p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68"><span><a href="#" style="color: #4F35DF">support</a></span> | <span><a href="#" style="color: #4F35DF">terms & conditions</a></span></p>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: row; justify-content: space-between"> <!-- footer section -->
+<img style="height:24px" src="https://zeeinvoices.com/Images/logos/zee-logo.png" alt="zeeinvoices">
+<div style="width:150px; justify-content: space-between; display: flex; flex-direction: row; align-items: center"> <!-- social links -->
+<a  href="https://www.facebook.com/zeeinvoices/" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/facebook2-icon.svg" alt="f"></a>
+<a  href="https://www.instagram.com/zeeinvoices/" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/instagram2-icon.svg" alt="i"></a>
+<a  href="https://www.youtube.com/@ZeeInvoices" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/youtube1-icon.svg" alt="y"></a>
+<a  href="https://twitter.com/zeeinvoices" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/twitterx-icon.svg" alt="x"></a>
+<a  href="https://www.linkedin.com/company/zeeinvoices/" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/linkedin1-icon.svg" alt="l"></a> 
+</div>
+</div>
+ 
+</div>`;
+}

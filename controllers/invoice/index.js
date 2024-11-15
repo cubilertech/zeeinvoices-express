@@ -254,19 +254,18 @@ exports.create = async (req, res) => {
 
     const record = await Service.create({ ...data,signature, user_id: userFound?._id });
 
-      const senderTemplate = emailInvoiceToSender(data.fromDetails);
-      await NodemailerService.sendEmail(
-        data.fromDetails.email,
-        "Your Invoice Has Been Created",
-        senderTemplate,
-      );
-      const recepientTemplate = emailInvoiceToClient(data.fromDetails,data.toDetails,{id:data.id,total:invoiceTotal});
-
-      await NodemailerService.sendEmail(
-        data.toDetails.email,
-        `You've Received an Invoice from ${data.fromDetails?.name}`,
-        recepientTemplate,
-      );
+      // const senderTemplate = emailInvoiceToSender(data.fromDetails);
+      // await NodemailerService.sendEmail(
+      //   data.fromDetails.email,
+      //   "Your Invoice Has Been Created",
+      //   senderTemplate,
+      // );
+      // const recepientTemplate = emailInvoiceToClient(data.fromDetails,data.toDetails,{id:data.id,total:invoiceTotal});
+      // await NodemailerService.sendEmail(
+      //   data.toDetails.email,
+      //   `You've Received an Invoice from ${data.fromDetails?.name}`,
+      //   recepientTemplate,
+      // );
 
     handleResponse(
       res,
