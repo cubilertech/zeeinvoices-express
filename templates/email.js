@@ -213,9 +213,9 @@ exports.approachingRecepientEmail = (data) => {
 <p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">Thousands of professionals, freelancers, and businesses already use Zeeinvoices to make invoicing a seamless part of their workflow.</p>
 
 <p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:700; color: #4F5A68">Ready to Simplify Your Invoicing?</p>
-
-<input type="submit" style="font-size: 16px; line-height: 24px; font-weight:700;background-color: #4F35DF; color: white; border: none; border-radius: 4px; padding-top: 12px;padding-bottom: 12px; padding-right: 48px; padding-left: 48px" value="Learn More & Get Started">
-
+<a href="https://zeeinvoices.com" target="_blank">
+<button style="font-size: 16px; line-height: 24px; font-weight:700;background-color: #4F35DF; color: white; border: none; border-radius: 4px; padding-top: 12px;padding-bottom: 12px; padding-right: 48px; padding-left: 48px" >Learn More & Get Started</button>
+</a>
 <p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">We’d love to help you take control of your invoicing and make it a breeze.</p>
 
 <p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">Looking forward to welcoming you on board!</p>
