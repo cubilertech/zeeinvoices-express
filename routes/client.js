@@ -18,7 +18,7 @@ router.get("/:id", authMiddleware, getSingle);
 router.put("/modify-existing-documents", modifyExistingDocuments);
 router.put("/:id", authMiddleware, update);
 router.delete("/:id", authMiddleware, deleteSingle);
-router.post("/send-promotional-email",authMiddleware,sendPromotionalEmail);
+router.post("/send-promotional-email",sendPromotionalEmail);
 router.post("/save", authMiddleware, create);
 
 module.exports = router;
