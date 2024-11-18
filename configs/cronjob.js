@@ -48,15 +48,16 @@ cron.schedule("0 * * * *", async () => {
   // Your task logic here
   try {
     // const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000); // 24 hours ago
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // 30 days ago
+    const twoDaysAgo = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000); // 30 days ago
+    // const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // 30 days ago
 
     // Find users who haven't logged in for over 30 days
     const inactiveUsers = await UserService.findAll({
-        lastLogin: { $lt: thirtyDaysAgo },
+        lastLogin: { $lt: twoDaysAgo },
         $or: [
             // { lastReminderSent: { $exists: false } },
             { lastReminderSent: null }, // lastReminderSent is explicitly null
-            { lastReminderSent: { $lt: thirtyDaysAgo } },
+            { lastReminderSent: { $lt: twoDaysAgo } },
         ],
     });
 

@@ -4,6 +4,7 @@ const InvoiceService = require("../../services/invoice");
 const { handleError, handleResponse } = require("../../utils/responses");
 const NodemailerService = require("../../services/nodemailer");
 const ClientService = require("../../services/client");
+const { approachingRecepientEmail } = require("../../templates/email");
 
 exports.getAll = async (req, res) => {
   const user = req.user;
@@ -104,22 +105,18 @@ exports.create = async (req, res) => {
 
 exports.sendPromotionalEmail = async (req, res) => {
   const data = { ...req.body };
-
+  const html = approachingRecepientEmail(data);
   try {
-    // Find the invoice by invoiceId and clientId
-    const invoice = await InvoiceService.findBy({
-      _id: data?.invoiceId,
-      to: data?.clientId,
-    });
-
-    if (!invoice) {
-      throw new Error("Invalid invoice");
+    if(!data?.email){
+      throw new Error('Email is required');
     }
-
     // Find the client by clientId
-    const client = await ClientService.findBy({ _id: data?.clientId });
+    const client = await ClientService.findBy({ email: data?.email });
     if (!client) {
-      throw new Error("Invalid client");
+    // Send the promotional email
+    await NodemailerService.sendEmail(client?.email, "Promotional Email", html);
+    return handleResponse(res,200,"Promotional Email sent.");
+      // throw new Error("Invalid client");
     }
 
     const currentTime = new Date();
@@ -137,7 +134,6 @@ exports.sendPromotionalEmail = async (req, res) => {
     }
 
     // Send the promotional email
-    const html = approachingRecepientEmail(client);
     await NodemailerService.sendEmail(client?.email, "Promotional Email", html);
 
     // Update or insert lastPromotionalEmailSentOn to the current date
@@ -146,7 +142,7 @@ exports.sendPromotionalEmail = async (req, res) => {
       { $set: { lastPromotionalEmailSentOn: currentTime } }
     );
 
-    handleResponse(res, 200, "Promotional email sent successfully.");
+    handleResponse(res, 200, "Promotional email sent.");
   } catch (err) {
     handleError(res, err);
   }
