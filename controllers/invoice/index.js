@@ -131,7 +131,7 @@ exports.update = async (req, res) => {
     }
 
     if (req.files && req.files['image'] && req.files['image'][0]) {
-      const filePath = req.files['signatureImage'][0].path;
+      const filePath = req.files['image'][0].path;
       data.image = await addOrUpdateOrDelete(
         multerActions.PUT,
         multerSource.INVOICES,
