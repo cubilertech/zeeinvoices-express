@@ -201,7 +201,7 @@ exports.deleteSingle = async (req, res) => {
         record.image
       );
     }
-    if(record && record.signature.image && record.signature.image?.startsWith("images/invoices/uploads")){
+    if(record && record?.signature?.image && record?.signature?.image?.startsWith("images/invoices/uploads")){
       await addOrUpdateOrDelete(
         multerActions.DELETE,
         multerSource.INVOICES,
