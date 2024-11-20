@@ -4,6 +4,7 @@ const cors = require("cors");
 const path = require("path");
 dotenv.config();
 require("./configs/db");
+require("./configs/cronjob");
 const app = express();
 const indexRouter = require("./routes/index");
 const userRouter = require("./routes/user");

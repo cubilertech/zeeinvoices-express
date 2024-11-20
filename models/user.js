@@ -36,6 +36,14 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    lastLogin: {
+      type: Date,
+      default: Date.now, // Automatically set to the current date/time for new users
+    },
+    lastReminderSent: {
+      type: Date,
+      default: null, // No reminder sent initially
+  }
   },
   { timestamps: true }
 );

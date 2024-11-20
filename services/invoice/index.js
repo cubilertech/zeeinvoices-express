@@ -29,7 +29,7 @@ class InvoiceService {
     });
   }
 
-  static findBy(data) {
+  static findByWithPipeline(data) {
     return new Promise((resolve, reject) => {
       const pipeline = fetchSingleInvoice(data);
       Invoice.aggregate(pipeline)
@@ -38,6 +38,18 @@ class InvoiceService {
             resolve(record[0]);
           else
             resolve(record);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+
+  static findBy(condition) {
+    return new Promise((resolve, reject) => {
+      Invoice.findOne(condition)
+        .then((result) => {
+          resolve(result);
         })
         .catch((err) => {
           reject(err);
@@ -62,6 +74,18 @@ class InvoiceService {
       Invoice.findOneAndUpdate(condition, data, { new: true })
         .then((record) => {
           resolve(record);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+
+  static updateMany(condition, data) {
+    return new Promise((resolve, reject) => {
+      Invoice.updateMany(condition, data)
+        .then((result) => {
+          resolve(result);
         })
         .catch((err) => {
           reject(err);

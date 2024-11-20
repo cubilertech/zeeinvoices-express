@@ -40,6 +40,18 @@ class ClientService {
     });
   }
 
+  static updateMany(condition, data) {
+    return new Promise((resolve, reject) => {
+      Model.updateMany(condition, data)
+        .then((result) => {
+          resolve(result);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+
   static delete(condition) {
     return new Promise((resolve, reject) => {
       Model.findOneAndDelete(condition)

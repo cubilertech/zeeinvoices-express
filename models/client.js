@@ -27,6 +27,10 @@ const clientSchema = new mongoose.Schema(
     address: {
       type: String,
     },
+    lastPromotionalEmailSentOn: {
+      type: Date,
+      default: null,
+    },
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
       required: "User reference is required",
@@ -35,6 +39,6 @@ const clientSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-clientSchema.index({ email: 1 }, { unique: true });
+clientSchema.index({ email: 1, user_id: 1 }, { unique: true });
 
 module.exports = mongoose.model("clients", clientSchema);
