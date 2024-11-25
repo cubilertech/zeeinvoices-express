@@ -139,11 +139,11 @@ exports.emailInvoiceToClient = (sender,client,invoice) => {
 <div style="display: flex; flex-direction: row; justify-content: space-between"> <!-- footer section -->
 <img style="height:24px" src="https://zeeinvoices.com/Images/logos/zee-logo.png" alt="zeeinvoices">
 <div style="width:150px; justify-content: space-between; display: flex; flex-direction: row; align-items: center"> <!-- social links -->
-<a  href="https://www.facebook.com/zeeinvoices/" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/facebook2-icon.svg" alt="f"></a>
-<a  href="https://www.instagram.com/zeeinvoices/" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/instagram2-icon.svg" alt="i"></a>
-<a  href="https://www.youtube.com/@ZeeInvoices" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/youtube1-icon.svg" alt="y"></a>
-<a  href="https://twitter.com/zeeinvoices" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/twitterx-icon.svg" alt="x"></a>
-<a  href="https://www.linkedin.com/company/zeeinvoices/" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/linkedin1-icon.svg" alt="l"></a> 
+<a  href="https://www.facebook.com/zeeinvoices/" target="_blank" rel="noopener noreferrer" style="text-decoration:none; margin-left: 12px"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/facebook-et-icon.png" alt="f"></a>
+<a  href="https://www.instagram.com/zeeinvoices/" target="_blank" rel="noopener noreferrer" style="text-decoration:none; margin-left: 12px"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/instagram-et-icon.png" alt="i"></a>
+<a  href="https://www.youtube.com/@ZeeInvoices" target="_blank" rel="noopener noreferrer" style="text-decoration:none; margin-left: 12px"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/youtube-et-icon.png" alt="y"></a>
+<a  href="https://twitter.com/zeeinvoices" target="_blank" rel="noopener noreferrer" style="text-decoration:none; margin-left: 12px"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/twitter-et-icon.png" alt="x"></a>
+<a  href="https://www.linkedin.com/company/zeeinvoices/" target="_blank" rel="noopener noreferrer" style="text-decoration:none; margin-left: 12px"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/linkedin-et-icon.png" alt="l"></a> 
 </div>
 </div>
  
