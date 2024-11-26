@@ -1,81 +1,75 @@
 const cron = require("node-cron");
 const UserService = require("../services/user");
-// const SendGridService = require("../services/sendGrid");
 const { accountInactiveTemplate } = require("../templates/email");
 const NodemailerService = require("../services/nodemailer");
 
-// // Task to run every 5 minutes
-// cron.schedule('*/2 * * * *', async () => {
-//     const date = new Date();
-//     console.log('Running task every 2 minutes',date.toLocaleTimeString());
-//     try {
-//         // const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000); // 24 hours ago
-//         // const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // 30 days ago
-//         const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000); 
-//         console.log(fiveMinutesAgo,'ssss');
-//         // Find users who haven't logged in for over 30 days
-//         const inactiveUsers = await UserService.findAll({
-//             lastLogin: { $lt: fiveMinutesAgo },
-//                     $or: [
-//                         // { lastReminderSent: { $exists: false } },
-//                         { lastReminderSent: null }, // lastReminderSent is explicitly null
-//                         { lastReminderSent: { $lt: fiveMinutesAgo } },
-//                     ],
-//         });
+// Delay function for rate limiting
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-//         // Send reminder emails
-//         inactiveUsers.forEach(async (user) => {
-//             const html = accountInactiveTemplate(user);
-//             // SendGridService.sendEmail(user.email, "Account inacitivity reminder", html, "Account Inactivity");
-//             await NodemailerService.sendEmail(
-//                 user.email,
-//                 "We Miss You! Come Back to ZeeInvoices",
-//                 html,
-//               );
-//                 // Update lastReminderSent to current time
-//                 await UserService.update({_id:user._id}, { lastReminderSent: new Date() });
-//         });
-
-//         console.log(`Sent reminders to ${inactiveUsers.length} inactive users.`);
-//     } catch (error) {
-//         console.error('Error in sending reminder emails:', error);
-//     }
-// });
+// Maximum retry attempts
+const MAX_RETRIES = 3;
 
 // Task to run every 1 hour
 cron.schedule("0 * * * *", async () => {
   console.log("Running task every 1 hour");
-  // Your task logic here
   try {
-    // const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000); // 24 hours ago
-    const twoDaysAgo = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000); // 30 days ago
-    // const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // 30 days ago
+    const twoDaysAgo = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
 
-    // Find users who haven't logged in for over 30 days
     const inactiveUsers = await UserService.findAll({
-        lastLogin: { $lt: twoDaysAgo },
-        $or: [
-            // { lastReminderSent: { $exists: false } },
-            { lastReminderSent: null }, // lastReminderSent is explicitly null
-            { lastReminderSent: { $lt: twoDaysAgo } },
-        ],
+      lastLogin: { $lt: twoDaysAgo },
+      $or: [
+        { lastReminderSent: null },
+        { lastReminderSent: { $lt: twoDaysAgo } },
+      ],
     });
 
-    // Send reminder emails
-    inactiveUsers.forEach(async (user) => {
+    console.log(`Found ${inactiveUsers.length} inactive users to notify.`);
+
+    for (let i = 0; i < inactiveUsers.length; i++) {
+      const user = inactiveUsers[i];
       const html = accountInactiveTemplate(user);
-      // SendGridService.sendEmail(user.email, "Account inacitivity reminder", html, "Account Inactivity");
-      await NodemailerService.sendEmail(
-        user.email,
-        "We Miss You! Come Back to ZeeInvoices",
-        html
-      );
-        // Update lastReminderSent to current time
-        await UserService.update({_id:user._id}, { lastReminderSent: new Date() });
-    });
+      let attempts = 0;
 
-    console.log(`Sent reminders to ${inactiveUsers.length} inactive users.`);
+      while (attempts < MAX_RETRIES) {
+        try {
+          // Send email
+          await NodemailerService.sendEmail(
+            user.email,
+            "We Miss You! Come Back to ZeeInvoices",
+            html
+          );
+
+          // Update lastReminderSent to current time
+          await UserService.update(
+            { _id: user._id },
+            { lastReminderSent: new Date() }
+          );
+
+          console.log(`Email sent to ${user.email}`);
+          break; // Exit retry loop on success
+        } catch (error) {
+          attempts++;
+          console.error(
+            `Error sending email to ${user.email} (attempt ${attempts}):`,
+            error.message
+          );
+
+          // If max retries reached, log and move to the next user
+          if (attempts >= MAX_RETRIES) {
+            console.error(
+              `Failed to send email to ${user.email} after ${MAX_RETRIES} attempts.`
+            );
+          } else {
+            // Wait before retrying
+            await delay(5000); // 5-second delay between retries
+          }
+        }
+      }
+
+      // Delay between sending emails to avoid overloading SMTP
+      await delay(2000); // 2-second delay
+    }
   } catch (error) {
-    console.error("Error in sending reminder emails:", error);
+    console.error("Error in cron job:", error);
   }
 });
