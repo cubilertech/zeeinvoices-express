@@ -41,8 +41,8 @@ return `<div style="background-color: #F2F2F7; padding-top: 48px;padding-bottom:
 </div>
 </div>
 
-<div style="width: 100%; margin-top:40px; display: flex; flex-direction: row; justify-content: space-between"> <!-- footer section -->
-<img style="height:24px" src="" alt="zeeinvoices">
+<div style="width: 100%; margin-top:40px; "> <!-- footer section -->
+<img style="height:24px; display:inline-block;" src="https://zeeinvoices.com/Images/logos/zee-logo.png" alt="zeeinvoices">
 <div style="align-items: center; float: right;"> <!-- social links -->
 <a  href="https://www.facebook.com/zeeinvoices/" target="_blank" rel="noopener noreferrer" style="text-decoration:none; margin-left: 12px"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/facebook-et-icon.png" alt="f"></a>
 <a  href="https://www.instagram.com/zeeinvoices/" target="_blank" rel="noopener noreferrer" style="text-decoration:none; margin-left: 12px"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/instagram-et-icon.png" alt="i"></a>
@@ -92,8 +92,8 @@ exports.accountInactiveTemplate = (data) => {
 </div>
 </div>
 
-<div style="width: 100%; margin-top:40px; display: flex; flex-direction: row; justify-content: space-between"> <!-- footer section -->
-<img style="height:24px" src="" alt="zeeinvoices">
+<div style="width: 100%; margin-top:40px;"> <!-- footer section -->
+<img style="height:24px; display:inline-block;" src="https://zeeinvoices.com/Images/logos/zee-logo.png" alt="zeeinvoices">
 <div style="align-items: center; float: right;"> <!-- social links -->
 <a  href="https://www.facebook.com/zeeinvoices/" target="_blank" rel="noopener noreferrer" style="text-decoration:none; margin-left: 12px"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/facebook-et-icon.png" alt="f"></a>
 <a  href="https://www.instagram.com/zeeinvoices/" target="_blank" rel="noopener noreferrer" style="text-decoration:none; margin-left: 12px"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/instagram-et-icon.png" alt="i"></a>
@@ -235,7 +235,7 @@ exports.approachingRecepientEmail = (data) => {
 </div>
 
 <div style="width: 100%; margin-top:40px; display: flex; flex-direction: row; justify-content: space-between"> <!-- footer section -->
-<img style="height:24px" src="" alt="zeeinvoices">
+<img style="height:24px" src="https://zeeinvoices.com/Images/logos/zee-logo.png" alt="zeeinvoices">
 <div style="align-items: center; float: right;"> <!-- social links -->
 <a  href="https://www.facebook.com/zeeinvoices/" target="_blank" rel="noopener noreferrer" style="text-decoration:none; margin-left: 12px"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/facebook-et-icon.png" alt="f"></a>
 <a  href="https://www.instagram.com/zeeinvoices/" target="_blank" rel="noopener noreferrer" style="text-decoration:none; margin-left: 12px"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/instagram-et-icon.png" alt="i"></a>

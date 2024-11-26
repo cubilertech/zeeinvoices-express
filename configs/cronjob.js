@@ -6,8 +6,6 @@ const NodemailerService = require("../services/nodemailer");
 // Delay function for rate limiting
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// Maximum retry attempts
-const MAX_RETRIES = 3;
 
 // Task to run every 1 hour
 cron.schedule("0 * * * *", async () => {
@@ -30,7 +28,6 @@ cron.schedule("0 * * * *", async () => {
       const html = accountInactiveTemplate(user);
       let attempts = 0;
 
-      while (attempts < MAX_RETRIES) {
         try {
           // Send email
           await NodemailerService.sendEmail(
@@ -48,26 +45,16 @@ cron.schedule("0 * * * *", async () => {
           console.log(`Email sent to ${user.email}`);
           break; // Exit retry loop on success
         } catch (error) {
-          attempts++;
+          // attempts++;
           console.error(
             `Error sending email to ${user.email} (attempt ${attempts}):`,
             error.message
           );
 
-          // If max retries reached, log and move to the next user
-          if (attempts >= MAX_RETRIES) {
-            console.error(
-              `Failed to send email to ${user.email} after ${MAX_RETRIES} attempts.`
-            );
-          } else {
-            // Wait before retrying
-            await delay(5000); // 5-second delay between retries
-          }
         }
-      }
 
       // Delay between sending emails to avoid overloading SMTP
-      await delay(2000); // 2-second delay
+      await delay(5000); // 5-second delay
     }
   } catch (error) {
     console.error("Error in cron job:", error);
