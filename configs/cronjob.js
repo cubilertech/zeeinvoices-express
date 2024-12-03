@@ -11,13 +11,13 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 cron.schedule("0 * * * *", async () => {
   console.log("Running task every 1 hour");
   try {
-    const twoDaysAgo = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
     const inactiveUsers = await UserService.findAll({
-      lastLogin: { $lt: twoDaysAgo },
+      lastLogin: { $lt: thirtyDaysAgo },
       $or: [
         { lastReminderSent: null },
-        { lastReminderSent: { $lt: twoDaysAgo } },
+        { lastReminderSent: { $lt: thirtyDaysAgo } },
       ],
     });
 
