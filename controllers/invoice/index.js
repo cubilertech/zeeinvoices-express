@@ -12,6 +12,7 @@ const InvoiceService = require("../../services/invoice");
 // const SendGridService = require("../../services/sendGrid");
 const NodemailerService = require("../../services/nodemailer");
 const path = require('path');
+
 exports.getAll = async (req, res) => {
   const user = req.user;
   const { page = 1, limit = 10, search = "" } = req.query; // Added search query
@@ -186,10 +187,12 @@ exports.update = async (req, res) => {
     handleError(res, err);
   }
 };
+
 exports.deleteSingle = async (req, res) => {
   const { id } = req.params;
   try {
-    const record = await Service.delete({ id });
+    const record = await Service.delete({ _id: id });
+
     if (
       record &&
       record.image &&
@@ -219,6 +222,7 @@ exports.deleteSingle = async (req, res) => {
     handleError(res, err);
   }
 };
+
 exports.create = async (req, res) => {
   const user = req.user;
   const data = { ...req.body };
