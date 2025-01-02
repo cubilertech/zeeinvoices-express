@@ -10,7 +10,6 @@ const clientSchema = new mongoose.Schema(
       type: String,
       required: "Email is required",
       match: /.+\@.+\..+/,
-      unique: true,
     },
     company_name: {
       type: String,

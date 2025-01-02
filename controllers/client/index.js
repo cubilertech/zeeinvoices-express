@@ -51,6 +51,7 @@ exports.getSingle = async (req, res) => {
     handleError(res, err);
   }
 };
+
 exports.update = async (req, res) => {
   const { id } = req.params;
   const data = { ...req.body };
@@ -66,6 +67,7 @@ exports.update = async (req, res) => {
     handleError(res, err);
   }
 };
+
 exports.deleteSingle = async (req, res) => {
   const { id } = req.params;
   try {
@@ -84,6 +86,7 @@ exports.deleteSingle = async (req, res) => {
     handleError(res, err);
   }
 };
+
 exports.create = async (req, res) => {
   const user = req.user;
   const data = { ...req.body };

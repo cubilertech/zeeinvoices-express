@@ -10,7 +10,6 @@ const senderSchema = new mongoose.Schema(
       type: String,
       required: "Email is required",
       match: /.+\@.+\..+/,
-      unique: true,
     },
     company_name: {
       type: String,
@@ -34,5 +33,6 @@ const senderSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
 senderSchema.index({ email: 1, user_id: 1 }, { unique: true });
 module.exports = mongoose.model("senders", senderSchema);
