@@ -143,7 +143,7 @@ exports.accountInactiveTemplate = (data) => {
   return `<div style="background-color: #F2F2F7; padding-top: 48px;padding-bottom: 48px; padding-right: 60px; padding-left: 60px">
 ${emailHeader()}
 <p style="font-family: Arial;font-size: 28px; line-height: 36px; font-weight:400; color: #4F5A68;">Hi ${data?.name},</p>
-<p style="font-family: Arial;font-size: 40px; line-height: 44px; font-weight:700; color: #4F5A68;">It’s Been a While – Come Back and Get Started with Zeeinvoices!</p>
+<p style="font-family: Arial;font-size: 40px; line-height: 44px; font-weight:700; color: #4F5A68;">It’s Been a While – Come Back and Get Started with Zeeinvoices!⏰</p>
 
 <p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">We noticed it’s been a while since you’ve logged into your Zeeinvoices account, and we just wanted to check in. We miss having you with us and wanted to remind you of the amazing features you’ve been missing out on!</p>
 
@@ -153,7 +153,11 @@ ${emailHeader()}
   <li><p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">Enhanced invoicing tools to make your life easier</p></li>
   <li><p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">Faster payment tracking and reporting</p></li>
   <li><p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">Improved user experience for smoother navigation</p></li>
-</ul>  
+</ul>
+
+<p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">ted again.
+If you’re ready to get back to streamlining your invoicing and boost your productivity, we’ve got you covered. Simply log in and pick up right where you left off!
+</p>
 
 <a href="https://zeeinvoices.com" target="_blank">
 <button style="font-size: 16px; line-height: 24px; font-weight:700;background-color: #4F35DF; color: white; border: none; border-radius: 4px; padding-top: 12px;padding-bottom: 12px; padding-right: 48px; padding-left: 48px" >Get Started</button>
