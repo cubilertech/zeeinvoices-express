@@ -215,7 +215,7 @@ exports.approachingRecepientEmail = (data) => {
   return `<div style="background-color: #F2F2F7; padding-top: 48px;padding-bottom: 48px; padding-right: 60px; padding-left: 60px">
 ${emailHeader()}
 <p style="font-family: Arial;font-size: 28px; line-height: 36px; font-weight:400; color: #4F5A68;">Hi ${data?.name},</p>
-<p style="font-family: Arial;font-size: 40px; line-height: 44px; font-weight:700; color: #4F5A68;">Say Goodbye to Complex Invoicing – Welcome to Zeeinvoices!</p>
+<p style="font-family: Arial;font-size: 40px; line-height: 44px; font-weight:700; color: #4F5A68;">Say Goodbye to Complex Invoicing – Welcome to Zeeinvoices!💼</p>
 
 <p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">We noticed that you often create business invoices using various platforms. We understand how time-consuming and complex managing invoices can be. That’s why we’re excited to introduce you to Zeeinvoices – the platform designed to simplify your invoicing process.</p>
 

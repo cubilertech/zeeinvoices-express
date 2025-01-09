@@ -8,7 +8,7 @@ const {
   getNewInvoiceId,
   getInvoicesByClient,
   getInvoicesBySender,
-  modifyExistingDocuments,
+  modifyExistingDocuments, changeStatus,
   // sendEmailInvoice,
 } = require("../controllers/invoice");
 const { upload } = require("../services/multer");
@@ -30,6 +30,7 @@ router.post("/save", authMiddleware, upload.fields([
   { name: "image", maxCount: 1 },
   { name: "signatureImage", maxCount: 1 },
 ]), create);
+router.post("/update-status/:id", authMiddleware, changeStatus);
 // router.post("/email", sendEmailInvoice);
 
 module.exports = router;

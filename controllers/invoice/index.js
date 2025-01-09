@@ -443,3 +443,34 @@ exports.modifyExistingDocuments = async (req,res)=>{
    handleError(res,err);
   }
 }
+
+exports.changeStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    console.log("Status id", status, id);
+    const result = await Service.update({
+      _id: id
+    }, {
+      status
+    });
+
+    if (result) {
+      res.status(200).json({
+        error: false,
+        message: "Status changed successfully"
+      })
+    } else {
+      res.status(400).json({
+        error: true,
+        message: "Failed to change status"
+      })
+    }
+  } catch (err) {
+    console.log("error", err);
+    res.status(500).json({
+      error: true,
+      message: "Failed to change status"
+    })
+  }
+};
