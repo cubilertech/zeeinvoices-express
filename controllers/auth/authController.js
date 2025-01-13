@@ -8,8 +8,8 @@ exports.getUserURL = async (req, res) => {
         const redirectUrl = `${process.env.GOOGLE_CALLBACK_URL}`;
 
         const oAuth2Client = new OAuth2Client(
-            process.env.GOOGLE_CLIENT_ID_ME,
-            process.env.GOOGLE_CLIENT_SECRET_ME,
+            process.env.GOOGLE_CLIENT_ID,
+            process.env.GOOGLE_CLIENT_SECRET,
             redirectUrl
         )
 
@@ -45,8 +45,8 @@ exports.confirmUserCredentials = async (req, res) => {
         const redirectUrl = `${process.env.GOOGLE_CALLBACK_URL}`;
 
         const oAuth2Client = new OAuth2Client(
-            process.env.GOOGLE_CLIENT_ID_ME,
-            process.env.GOOGLE_CLIENT_SECRET_ME,
+            process.env.GOOGLE_CLIENT_ID,
+            process.env.GOOGLE_CLIENT_SECRET,
             redirectUrl
         )
 
