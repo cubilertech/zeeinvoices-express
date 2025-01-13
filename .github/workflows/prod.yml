@@ -35,7 +35,7 @@ jobs:
           fi
       
       - name: Docker start 
-        run: docker run -d --name backend-prod-c -p 3002:3005 backend-prod
+        run: docker run -d --name backend-prod-c -p 3004:3005 backend-prod
         # run: docker run -d --name backend-prod-c -p 3002:3005   --log-driver=awslogs   --log-opt awslogs-group=zeeinvoices   --log-opt awslogs-stream=zeeinvoices-prod   --log-opt awslogs-region=eu-north-1    --restart always backend-prod
       - name: Docker show logs 
         run: sleep 50 && docker logs backend-prod-c
