@@ -2,10 +2,9 @@
 const express = require('express');
 const authRouter = express.Router();
 
-const {OAuth2Client} = require('google-auth-library');
-const {getUserURL} = require("../controllers/auth/authController");
+const {getUserURL, confirmUserCredentials} = require("../controllers/auth/authController");
 
 authRouter.post('/getAuthURL', getUserURL);
-authRouter.get('/', )
+authRouter.get('/', confirmUserCredentials);
 
 module.exports = authRouter;

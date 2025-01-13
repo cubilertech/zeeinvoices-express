@@ -7,7 +7,7 @@ function authMiddleware(req, res, next) {
   }
 
   const token = authHeader.split(" ")[1];
-  let oAuthClientID = process.env.GOOGLE_CLIENT_ID;
+  let oAuthClientID = process.env.GOOGLE_CLIENT_ID_ME;
   if(req.headers?.platform === 'mobile'){
     oAuthClientID = process.env.GOOGLE_CLIENT_ID_MOBILE;
   }

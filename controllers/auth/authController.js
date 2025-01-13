@@ -1,22 +1,21 @@
 const {OAuth2Client} = require("google-auth-library");
-
+const Service = require("../../services/user");
+const {accountCreatedTemplate} = require("../../templates/email");
+const NodemailerService = require("../../services/nodemailer");
 
 exports.getUserURL = async (req, res) => {
     try {
-        res.setHeader("Access-Control-Allow-Origin", "*");
-        res.setHeader("referrerPolicy", "no-referrer-when-downgrade");
-
-        const redirectUrl = 'https://staging.zeeinvoices/oauth';
+        const redirectUrl = `${process.env.GOOGLE_CALLBACK_URL}`;
 
         const oAuth2Client = new OAuth2Client(
-            process.env.GOOGLE_CLIENT_ID,
-            process.env.GOOGLE_CLIENT_SECRET,
+            process.env.GOOGLE_CLIENT_ID_ME,
+            process.env.GOOGLE_CLIENT_SECRET_ME,
             redirectUrl
         )
 
         const authorizeUrl = oAuth2Client.generateAuthUrl({
             access_type: 'offline',
-            scope: 'https://www.googleapis.com/auth/userinfo.profile openid',
+            scope: 'https://www.googleapis.com/auth/userinfo.profile openid https://www.googleapis.com/auth/userinfo.email',
             prompt: 'consent'
         });
         res.status(200).json({url: authorizeUrl});
@@ -43,20 +42,23 @@ const getUserData = async (access_token) => {
 exports.confirmUserCredentials = async (req, res) => {
     try {
         const code = req.query.code;
-        const redirectUrl = 'https://staging.zeeinvoices/oauth';
+        const redirectUrl = `${process.env.GOOGLE_CALLBACK_URL}`;
 
         const oAuth2Client = new OAuth2Client(
-            process.env.GOOGLE_CLIENT_ID,
-            process.env.GOOGLE_CLIENT_SECRET,
+            process.env.GOOGLE_CLIENT_ID_ME,
+            process.env.GOOGLE_CLIENT_SECRET_ME,
             redirectUrl
         )
+
+        if (req.query.error === 'access_denied') {
+            return res.redirect(`${process.env.FRONTEND_URL}`);
+        }
 
         const resAuth = await oAuth2Client.getToken(code);
         await oAuth2Client.setCredentials(resAuth.tokens);
 
         const user = oAuth2Client.credentials;
 
-        console.log("credentials", user);
         const userData = await getUserData(user.access_token);
 
         if (userData.error) {
@@ -65,13 +67,31 @@ exports.confirmUserCredentials = async (req, res) => {
                 message: "Failed to get user data"
             })
         } else {
-            console.log("UserData", userData.data);
+
+            const recordFound = await Service.findBy({ email: userData?.data?.email });
+
+            if (!recordFound) {
+                const record = await Service.create(userData?.data);
+                const html = accountCreatedTemplate(record);
+                await NodemailerService.sendEmail(
+                    userData?.data?.email,
+                    "Welcome to ZeeInvoices!",
+                    html,
+                );
+
+            } else {
+                const currentTime = new Date();
+                await Service.update({_id:recordFound?._id},{lastLogin:currentTime});
+            }
+
+            res.redirect(`${process.env.FRONTEND_URL}/create-new-invoice?error=${false}&token=${user.access_token}`);
         }
     } catch (err) {
         console.log("error", err);
-        res.status(500).json({
-            error: true,
-            message: "Failed to get user url"
-        })
+        res.redirect(`${process.env.FRONTEND_URL}/?error=${true}`);
+        // res.status(500).json({
+        //     error: true,
+        //     message: "Failed to get user url"
+        // })
     }
 }
