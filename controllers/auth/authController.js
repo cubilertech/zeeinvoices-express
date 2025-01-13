@@ -88,7 +88,7 @@ exports.confirmUserCredentials = async (req, res) => {
         }
     } catch (err) {
         console.log("error", err);
-        res.redirect(`${process.env.FRONTEND_URL}/?error=${true}`);
+        res.redirect(`${process.env.FRONTEND_URL}/?error=${true}&errormsg=${err.message}`);
         // res.status(500).json({
         //     error: true,
         //     message: "Failed to get user url"
