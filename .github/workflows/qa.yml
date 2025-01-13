@@ -11,7 +11,7 @@ env:
 jobs:
   deploy:
     name: Build and deploy qa Docker image
-    runs-on: backend
+    runs-on: [backend, self-hosted, linux-x64] 
     steps:
       - uses: actions/checkout@v3
       - name: Create env file
