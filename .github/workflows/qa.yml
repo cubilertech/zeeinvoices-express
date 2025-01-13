@@ -11,7 +11,7 @@ env:
 jobs:
   deploy:
     name: Build and deploy qa Docker image
-    runs-on: [backend, self-hosted, linux-x64] 
+    runs-on: be
     steps:
       - uses: actions/checkout@v3
       - name: Create env file
@@ -33,8 +33,8 @@ jobs:
           fi
       
       - name: Docker start 
-        # run: docker run -d --name backend-qa-c -p 3005:3005 backend-qa
-        run: docker run -d --name backend-qa-c -p 3005:3005   --log-driver=awslogs   --log-opt awslogs-group=zeeinvoices   --log-opt awslogs-stream=zeeinvoices-qa-staging  --log-opt awslogs-region=eu-north-1    --restart always backend-qa
+        run: docker run -d --name backend-qa-c -p 3005:3005 backend-qa
+        # run: docker run -d --name backend-qa-c -p 3005:3005   --log-driver=awslogs   --log-opt awslogs-group=zeeinvoices   --log-opt awslogs-stream=zeeinvoices-qa-staging  --log-opt awslogs-region=eu-north-1    --restart always backend-qa
 
     
       - name: Docker show logs 
