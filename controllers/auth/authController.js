@@ -15,7 +15,7 @@ exports.getUserURL = async (req, res) => {
 
         const authorizeUrl = oAuth2Client.generateAuthUrl({
             access_type: 'offline',
-            scope: 'https://www.googleapis.com/auth/userinfo.profile openid https://www.googleapis.com/auth/userinfo.email',
+            scope: 'https://www.googleapis.com/auth/userinfo.profile',
             prompt: 'consent'
         });
         res.status(200).json({url: authorizeUrl});
@@ -88,7 +88,7 @@ exports.confirmUserCredentials = async (req, res) => {
         }
     } catch (err) {
         console.log("error", err);
-        res.redirect(`${process.env.FRONTEND_URL}/?error=${true}&errormsg=${err.message}`);
+        res.redirect(`${process.env.FRONTEND_URL}/?error=${true}`);
         // res.status(500).json({
         //     error: true,
         //     message: "Failed to get user url"
