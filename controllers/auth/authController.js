@@ -41,6 +41,7 @@ const getUserData = async (access_token) => {
 
 exports.confirmUserCredentials = async (req, res) => {
     try {
+        console.log("Here");
         const code = req.query.code;
         const redirectUrl = `${process.env.GOOGLE_CALLBACK_URL}`;
 
