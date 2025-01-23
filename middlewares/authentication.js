@@ -12,18 +12,18 @@ function authMiddleware(req, res, next) {
     oAuthClientID = process.env.GOOGLE_CLIENT_ID_MOBILE;
   }
   verifyToken(token,oAuthClientID)
-    .then((tokenInfo) => {
-      if (tokenInfo) {
-        req.user = tokenInfo;
-        next();
-      } else {
-        res.status(401).json({ error: "Invalid or expired token" });
-      }
-    })
-    .catch((error) => {
-      console.error("Error in auth middleware:", error);
-      res.status(500).json({ error: "Internal server error" });
-    });
+      .then((tokenInfo) => {
+        if (tokenInfo) {
+          req.user = tokenInfo;
+          next();
+        } else {
+          res.status(401).json({ error: "Invalid or expired token" });
+        }
+      })
+      .catch((error) => {
+        console.error("Error in auth middleware:", error);
+        res.status(500).json({ error: "Internal server error" });
+      });
 }
 
 module.exports = authMiddleware;

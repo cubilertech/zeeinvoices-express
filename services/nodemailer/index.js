@@ -6,12 +6,15 @@ const transporter = nodemailer.createTransport({
     user: process.env.SMTP_USERNAME,
     pass: process.env.SMTP_APP_PASSWORD,
   },
+  tls: {
+    rejectUnauthorized: false,
+  }
 });
 
 class NodemailerService {
-  static sendEmail(to, subject, html = "<p>Hi</p>", text = "") {
+  static sendEmail(to, subject, html = "<p>Hi</p>", text = "", from = "Developer") {
     const messageData = {
-      from: `Developer <Info@ZeeInvoices.com>`,
+      from: `zeeinvoiceswebsite <Info@ZeeInvoices.com>`,
       to: to,
       subject: subject,
       html: html,

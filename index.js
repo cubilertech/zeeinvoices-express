@@ -11,6 +11,7 @@ const userRouter = require("./routes/user");
 const invoiceRouter = require("./routes/invoice");
 const clientRouter = require("./routes/client");
 const senderRouter = require("./routes/sender");
+const authRouter = require("./routes/oauth");
 
 const port = process.env.PORT || 3005;
 app.use(cors({ origin: "*" }));
@@ -22,6 +23,7 @@ app.use("/clients", clientRouter);
 app.use("/senders", senderRouter);
 app.use("/users", userRouter);
 app.use("/", indexRouter);
+app.use("/oauth", authRouter)
 
 app.listen(port, () => {
   console.log(`App is listening on port ${port}`);

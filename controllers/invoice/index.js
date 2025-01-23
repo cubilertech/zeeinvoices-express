@@ -12,6 +12,7 @@ const InvoiceService = require("../../services/invoice");
 // const SendGridService = require("../../services/sendGrid");
 const NodemailerService = require("../../services/nodemailer");
 const path = require('path');
+
 exports.getAll = async (req, res) => {
   const user = req.user;
   const { page = 1, limit = 10, search = "" } = req.query; // Added search query
@@ -186,10 +187,12 @@ exports.update = async (req, res) => {
     handleError(res, err);
   }
 };
+
 exports.deleteSingle = async (req, res) => {
   const { id } = req.params;
   try {
-    const record = await Service.delete({ id });
+    const record = await Service.delete({ _id: id });
+
     if (
       record &&
       record.image &&
@@ -219,6 +222,7 @@ exports.deleteSingle = async (req, res) => {
     handleError(res, err);
   }
 };
+
 exports.create = async (req, res) => {
   const user = req.user;
   const data = { ...req.body };
@@ -439,3 +443,34 @@ exports.modifyExistingDocuments = async (req,res)=>{
    handleError(res,err);
   }
 }
+
+exports.changeStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    console.log("Status id", status, id);
+    const result = await Service.update({
+      _id: id
+    }, {
+      status
+    });
+
+    if (result) {
+      res.status(200).json({
+        error: false,
+        message: "Status changed successfully"
+      })
+    } else {
+      res.status(400).json({
+        error: true,
+        message: "Failed to change status"
+      })
+    }
+  } catch (err) {
+    console.log("error", err);
+    res.status(500).json({
+      error: true,
+      message: "Failed to change status"
+    })
+  }
+};

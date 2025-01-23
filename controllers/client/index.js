@@ -51,30 +51,32 @@ exports.getSingle = async (req, res) => {
     handleError(res, err);
   }
 };
+
 exports.update = async (req, res) => {
   const { id } = req.params;
   const data = { ...req.body };
   try {
     const record = await Service.update({ _id: id }, data);
     handleResponse(
-      res,
-      200,
-      "Recipients Details Has been updated successfully",
-      record
+        res,
+        200,
+        "Recipients Details Has been updated successfully",
+        record
     );
   } catch (err) {
     handleError(res, err);
   }
 };
+
 exports.deleteSingle = async (req, res) => {
   const { id } = req.params;
   try {
     const invoiceExists = await InvoiceService.count({ to: id });
     if (invoiceExists) {
       return handleResponse(
-        res,
-        400,
-        "Cannot delete Recipient. It is referenced in invoices."
+          res,
+          400,
+          "Cannot delete Recipient. It is referenced in invoices."
       );
     }
 
@@ -84,6 +86,7 @@ exports.deleteSingle = async (req, res) => {
     handleError(res, err);
   }
 };
+
 exports.create = async (req, res) => {
   const user = req.user;
   const data = { ...req.body };
@@ -118,22 +121,22 @@ exports.sendPromotionalEmail = async (req, res) => {
       // Check if 14 days have passed since the last promotional email
       if (lastPromotionalEmailSentOn) {
         const daysSinceLastEmail = Math.floor(
-          (currentTime - new Date(lastPromotionalEmailSentOn)) /
+            (currentTime - new Date(lastPromotionalEmailSentOn)) /
             (1000 * 60 * 60 * 24)
         );
 
         if (daysSinceLastEmail <= 14) {
           return handleResponse(
-            res,
-            200,
-            "Email not sent. Last promotional email sent less than 14 days ago."
+              res,
+              200,
+              "Email not sent. Last promotional email sent less than 14 days ago."
           );
         }
       }
       // Update or insert lastPromotionalEmailSentOn to the current date
       await ClientService.update(
-        { _id: client._id },
-        { $set: { lastPromotionalEmailSentOn: currentTime } }
+          { _id: client._id },
+          { $set: { lastPromotionalEmailSentOn: currentTime } }
       );
       // throw new Error("Invalid client");
     }
@@ -150,14 +153,14 @@ exports.sendPromotionalEmail = async (req, res) => {
 exports.modifyExistingDocuments = async (req, res) => {
   try {
     const result = await Service.updateMany(
-      {
-        lastPromotionalEmailSentOn: { $exists: false },
-      },
-      {
-        $set: {
-          lastPromotionalEmailSentOn: null,
+        {
+          lastPromotionalEmailSentOn: { $exists: false },
         },
-      }
+        {
+          $set: {
+            lastPromotionalEmailSentOn: null,
+          },
+        }
     );
     handleResponse(res, 200, "Records modified", result);
   } catch (err) {
