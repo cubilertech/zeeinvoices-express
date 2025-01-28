@@ -44,6 +44,16 @@ const userSchema = new mongoose.Schema(
             type: Date,
             default: null, // No reminder sent initially
         },
+        is_local_user: {
+            type: Boolean,
+            default: false
+        },
+        password: {
+            type: String,
+            required: "Password is required",
+            minlength: [8, "Password must be atleast 8 character long"],
+            allowNull: false
+        }
     },
     { timestamps: true }
 );

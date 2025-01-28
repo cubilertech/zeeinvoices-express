@@ -8,13 +8,14 @@ const {
   getAllData
 } = require("../controllers/sender");
 const authMiddleware = require("../middlewares/authentication");
+const jwtVerify = require("../middlewares/jwtVerify");
 const router = express.Router();
 
-router.get("/", authMiddleware, getAll);
-router.get("/getAll", authMiddleware, getAllData);
-router.get("/:id", authMiddleware, getSingle);
-router.put("/:id", authMiddleware, update);
-router.delete("/:id", authMiddleware, deleteSingle);
-router.post("/save", authMiddleware, create);
+router.get("/", jwtVerify, getAll);
+router.get("/getAll", jwtVerify, getAllData);
+router.get("/:id", jwtVerify, getSingle);
+router.put("/:id", jwtVerify, update);
+router.delete("/:id", jwtVerify, deleteSingle);
+router.post("/save", jwtVerify, create);
 
 module.exports = router;
