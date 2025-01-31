@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport({
     user: process.env.SMTP_USERNAME,
     pass: process.env.SMTP_APP_PASSWORD,
   },
-  requireTLS: true,
+  requireTLS: true, // use for live
   // tls: {
   //   rejectUnauthorized: false,
   // } // use for local

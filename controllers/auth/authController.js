@@ -240,7 +240,9 @@ exports.userForgetPassword = async (req, res) => {
 
         const token = generateJwt(data, false);
 
-        const html = forgetPasswordTemplate(token);
+        const URL = `${process.env.FRONTEND_URL}/reset-password?token=${token}`
+
+        const html = forgetPasswordTemplate(URL);
         await NodemailerService.sendEmail(
             email,
             "Account Reset Password",

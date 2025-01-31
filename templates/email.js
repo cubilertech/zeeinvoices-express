@@ -242,7 +242,7 @@ ${emailFooter()}
 `;
 }
 
-exports.forgetPasswordTemplate = (resetToken) => {
+exports.forgetPasswordTemplate = (URL) => {
   return `
   ${emailHeader()}
 
@@ -262,7 +262,7 @@ No worries – we’re here to help you get back on track.
 To reset your password, simply click the button below:
 </p>
 
-<a href="http://localhost:3000/reset-password?token=${resetToken.token}" target="_blank">
+<a href="${URL}" target="_blank">
 <button style="margin: 20px 0;font-size: 16px; line-height: 24px; font-weight:700;background-color: #4F35DF; color: white; border: none; border-radius: 4px; padding-top: 12px;padding-bottom: 12px; padding-right: 48px; padding-left: 48px" >
 Reset My Password
 </button>
