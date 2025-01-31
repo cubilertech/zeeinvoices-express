@@ -136,11 +136,11 @@ ${emailHeader()}
 <p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">Welcome to ZeeInvoices – we’re here to make your invoicing experience better than ever!</p>
 
 ${emailFooter()}
-</div>`;
+`;
 };
 
 exports.accountInactiveTemplate = (data) => {
-  return `<div style="background-color: #F2F2F7; padding-top: 48px;padding-bottom: 48px; padding-right: 60px; padding-left: 60px">
+  return `
 ${emailHeader()}
 <p style="font-family: Arial;font-size: 28px; line-height: 36px; font-weight:400; color: #4F5A68;">Hi ${data?.name},</p>
 <p style="font-family: Arial;font-size: 40px; line-height: 44px; font-weight:700; color: #4F5A68;">It’s Been a While – Come Back and Get Started with Zeeinvoices!⏰</p>
@@ -169,11 +169,11 @@ If you’re ready to get back to streamlining your invoicing and boost your prod
 
 
  ${emailFooter()}
-</div>`;
+`;
 }
 
 exports.emailInvoiceToClient = (sender,client,invoice) => {
-  return `<div style="background-color: #F2F2F7; padding-top: 48px;padding-bottom: 48px; padding-right: 60px; padding-left: 60px">
+  return `
 ${emailHeader()}
 <p style="font-family: Arial;font-size: 28px; line-height: 36px; font-weight:400; color: #4F5A68;">Dear ${client?.name},</p>
 
@@ -189,11 +189,11 @@ ${emailHeader()}
 
 <p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">Please review and process the invoice at your earliest convenience.</p>
  ${emailFooter()}
-</div>`
+`
 }
 
 exports.emailInvoiceToSender = (sender) => {
-  return `<div style="background-color: #F2F2F7; padding-top: 48px;padding-bottom: 48px; padding-right: 60px; padding-left: 60px">
+  return `
 ${emailHeader()}
 <p style="font-family: Arial, sans-serif;font-size: 28px; line-height: 36px; font-weight:400; color: #4F5A68;">Hi ${sender?.name},</p>
 <p style="font-family: Arial, sans-serif;font-size: 40px; line-height: 44px; font-weight:700; color: #4F5A68;">Success! Your New Invoice is Ready</p>
@@ -208,11 +208,12 @@ ${emailHeader()}
 
 <p style="font-family: Arial, sans-serif;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">Thank you for choosing ZeeInvoices to streamline your invoicing process!</p>
 
-</div>`;
+${emailFooter()}
+`;
 }
 
 exports.approachingRecepientEmail = (data) => {
-  return `<div style="background-color: #F2F2F7; padding-top: 48px;padding-bottom: 48px; padding-right: 60px; padding-left: 60px">
+  return `
 ${emailHeader()}
 <p style="font-family: Arial;font-size: 28px; line-height: 36px; font-weight:400; color: #4F5A68;">Hi ${data?.name},</p>
 <p style="font-family: Arial;font-size: 40px; line-height: 44px; font-weight:700; color: #4F5A68;">Say Goodbye to Complex Invoicing – Welcome to Zeeinvoices!💼</p>
@@ -238,6 +239,40 @@ ${emailHeader()}
 <p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">Looking forward to welcoming you on board!</p>
 
 ${emailFooter()}
- 
-</div>`;
+`;
+}
+
+exports.forgetPasswordTemplate = (resetToken) => {
+  return `
+  ${emailHeader()}
+
+<p style="font-family: Arial;font-size: 40px; line-height: 44px; font-weight:700; color: #4F5A68; margin-top: 72px;">
+Need to Reset Your Password? We’ve Got You Covered! 🔑 
+</p>
+
+<p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68; margin: 0;">
+We received a request to reset your password for your ZeeInvoices account. </br>
+</p>
+
+<p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68; margin: 0 !important;">
+No worries – we’re here to help you get back on track.
+</p>
+
+<p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">
+To reset your password, simply click the button below:
+</p>
+
+<a href="http://localhost:3000/reset-password?token=${resetToken.token}" target="_blank">
+<button style="margin: 20px 0;font-size: 16px; line-height: 24px; font-weight:700;background-color: #4F35DF; color: white; border: none; border-radius: 4px; padding-top: 12px;padding-bottom: 12px; padding-right: 48px; padding-left: 48px" >
+Reset My Password
+</button>
+</a>
+
+<p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">
+<span style="margin-bottom: 4px;">🔒</span> <span style="font-weight: 700;">Important: </span>For security reasons, this link is only valid for the next 1 day. If you didn’t request a 
+password reset, please ignore this email or reach out to our support team if you have any concerns.
+</p>
+
+  ${emailFooter()}
+  `
 }

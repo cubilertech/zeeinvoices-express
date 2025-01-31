@@ -1,6 +1,6 @@
 const {OAuth2Client} = require("google-auth-library");
 const Service = require("../../services/user");
-const {accountCreatedTemplate} = require("../../templates/email");
+const {accountCreatedTemplate, forgetPasswordTemplate} = require("../../templates/email");
 const NodemailerService = require("../../services/nodemailer");
 const bcrypt = require("bcrypt");
 const generateJwt = require("../../utils/generateJwt");
@@ -70,11 +70,7 @@ exports.confirmUserCredentials = async (req, res) => {
             })
         } else {
 
-            let recordFound = await Service.findBy({ email: userData?.data?.email }, {
-                $where: {
-                    is_local_user: false
-                }
-            });
+            let recordFound = await Service.findBy({ email: userData?.data?.email });
 
             if (!recordFound) {
                 recordFound = await Service.create(userData?.data);
@@ -138,11 +134,8 @@ exports.userLocalSignUp = async (req, res) => {
             })
         }
 
-        const recordFound = await Service.findBy({ email }, {
-            $where: {
-                is_local_user: true
-            }
-        });
+        const recordFound = await Service.findBy({ email });
+
         if (recordFound) {
             res.status(400).json({
                 error: true,
@@ -151,6 +144,14 @@ exports.userLocalSignUp = async (req, res) => {
         } else {
             const hashedPassword = await bcrypt.hash(password, 11);
             const record = await Service.create({ name: `${first_name} ${last_name}`, email, password: hashedPassword, is_local_user: true });
+
+            const html = accountCreatedTemplate(record);
+            await NodemailerService.sendEmail(
+                email,
+                "Welcome to ZeeInvoices!",
+                html,
+            );
+
             res.status(200).json({
                 error: false,
                 message: "User sign up successfully",
@@ -174,11 +175,11 @@ exports.userLocalSignIn = async (req, res) => {
             return res.status(400).json({error: true, message: 'Email or password is required'});
         }
 
-        const user = await Service.findBy({email}, {
-            $where: {
-                is_local_user: true
-            }
-        });
+        const user = await Service.findBy({email});
+
+        if (user && !user.password || user.password === '') {
+            return res.status(500).json({error: true, message: "User Password is not set"});
+        }
 
         if (user && user._id) {
             const isPasswordMatch = await bcrypt.compare(password, user.password);
@@ -213,6 +214,68 @@ exports.userLocalSignIn = async (req, res) => {
         res.status(500).json({
             error: true,
             message: 'Failed to sign in'
+        })
+    }
+}
+
+exports.userForgetPassword = async (req, res) => {
+    try {
+        const {email} = req.body;
+        const user = await Service.findBy({email});
+
+        if (!user) {
+            return res.status(404).json({error: true, message: 'User not found'});
+        }
+
+        const data = {
+            email: email
+        }
+
+        const token = generateJwt(data, false);
+
+        const html = forgetPasswordTemplate(token);
+        await NodemailerService.sendEmail(
+            email,
+            "Account Reset Password",
+            html,
+        );
+
+        res.status(200).json({error: false, message: "Password Reset Link has been sent"});
+    } catch (err) {
+        console.log("Error", err);
+        res.status(500).json({
+            error: true,
+            message: 'Failed to Reset Password'
+        })
+    }
+}
+
+exports.userVerifyToken = async (req, res) => {
+    try {
+        res.status(200).json({error: false, message: "Token is valid"});
+    } catch (err) {
+        console.log("Error", err);
+        res.status(500).json({
+            error: true,
+            message: 'Failed to verify token'
+        })
+    }
+}
+
+exports.userResetPassword = async (req, res) => {
+    try {
+        const {password} = req.body;
+        const {email} = req.user;
+
+        const hashedPassword = await bcrypt.hash(password, 11);
+        const user = await Service.update({email}, {password: hashedPassword});
+
+        res.status(200).json({error: false, message: "Password has been reset successfully"});
+    } catch (err) {
+        console.log("Error", err);
+        res.status(500).json({
+            error: true,
+            message: 'Failed to reset password'
         })
     }
 }

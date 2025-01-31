@@ -12,6 +12,7 @@ const InvoiceService = require("../../services/invoice");
 // const SendGridService = require("../../services/sendGrid");
 const NodemailerService = require("../../services/nodemailer");
 const path = require('path');
+const fs = require("fs");
 
 exports.getAll = async (req, res) => {
   const user = req.user;
@@ -474,3 +475,64 @@ exports.changeStatus = async (req, res) => {
     })
   }
 };
+
+exports.duplicateInvoice = async (req, res) => {
+  try {
+    const {id} = req.params;
+    const {_id : user_id} = req.user;
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id) || id.length !== 24) {
+      return res.status(400).json({error: true, message: "Invalid invoice ID"});
+    }
+
+    if (!user_id || !mongoose.Types.ObjectId.isValid(user_id) || user_id.length !== 24) {
+      return res.status(400).json({error: true, message: "Invalid user ID"});
+    }
+
+    const invoice = await Service.findBy({_id: id});
+
+    if (!invoice) {
+      return res.status(404).json({error: true, message: "Invoice not found"});
+    }
+
+    const newInvoiceId = await generateUniqueInvoiceId(invoice.id, user_id);
+    // console.log("New InvoiceId", newInvoiceId);
+    //
+    // console.log("Invoice", invoice);
+
+    let newImagePath = "";
+    if (invoice.image && invoice.image !== "") {
+      const oldImagePath = `public/${invoice.image}`;
+      if (fs.existsSync(oldImagePath)) {
+        const ext = path.extname(invoice.image);
+        const newFileName = `${Date.now()}_${path.basename(invoice.image, ext)}${ext}`;
+        const newFilePath = `public/images/invoices/uploads/${newFileName}`;
+
+        // Copy the existing image to the new file path
+        fs.copyFileSync(oldImagePath, newFilePath);
+
+        // Use multer's function to handle the new image path
+        newImagePath = await addOrUpdateOrDelete(multerActions.SAVE, "invoices", newFilePath);
+      }
+    }
+
+    const newInvoiceData = {
+      ...invoice.toObject(),
+      id: newInvoiceId,
+      image: newImagePath
+    };
+    delete newInvoiceData._id;
+
+    const newInvoice = await Service.create(newInvoiceData);
+
+    if (newInvoice) {
+      res.status(200).json({error: false, message: "Invoice duplicated successfully"});
+    } else {
+      res.status(500).json({error: true, message: "Failed to duplicate invoice"});
+    }
+    // const newInvoice = await Service.create();
+  } catch (err) {
+    console.log("Error", err);
+    res.status(500).json({error: true, message: "Server Error"})
+  }
+}
