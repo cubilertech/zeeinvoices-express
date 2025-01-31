@@ -118,19 +118,26 @@ exports.confirmUserCredentials = async (req, res) => {
 
 exports.userLocalSignUp = async (req, res) => {
     try {
-        const { first_name, last_name, email, password } = req.body;
+        const { name, email, password } = req.body;
 
         if (!email || email === "" || email.length <= 0) {
             return res.status(400).json({
                 error: true,
-                message: "Email and password are required"
+                message: "Email is required"
             })
         }
 
         if (!password || password === "" || password.length <= 0) {
             return res.status(400).json({
                 error: true,
-                message: "Email and password are required"
+                message: "Email is required"
+            })
+        }
+
+        if (!name || name === "" || name.length <= 0) {
+            return res.status(400).json({
+                error: true,
+                message: "Name is required"
             })
         }
 
@@ -143,7 +150,7 @@ exports.userLocalSignUp = async (req, res) => {
             })
         } else {
             const hashedPassword = await bcrypt.hash(password, 11);
-            const record = await Service.create({ name: `${first_name} ${last_name}`, email, password: hashedPassword, is_local_user: true });
+            const record = await Service.create({ name: name, email, password: hashedPassword, is_local_user: true });
 
             const html = accountCreatedTemplate(record);
             await NodemailerService.sendEmail(
@@ -177,7 +184,7 @@ exports.userLocalSignIn = async (req, res) => {
 
         const user = await Service.findBy({email});
 
-        if (user && !user.password || user.password === '') {
+        if (user && (!user.password || user.password === '')) {
             return res.status(500).json({error: true, message: "User Password is not set"});
         }
 
