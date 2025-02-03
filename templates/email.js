@@ -57,28 +57,28 @@ const emailHeader = () => {
 </head>
 <body>
 <div style="background-color: white;" class="mainContainer">
-  <img style="height:32px" src="https://zeeinvoices.com/Images/logos/zee-logo.png" alt="zeeinvoices">
+  <img style="height:32px; width: 232px" src="https://zeeinvoices.com/Images/logos/main-logo-hr.png" alt="zeeinvoices">
   `
 };
 
 const emailFooter = () => {
   return `
-<p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:700; color: #4F5A68">Warm regards,</p>
-<p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">The ZeeInvoices Team</p>
+    <p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:700; color: #4F5A68">Warm regards,</p>
+    <p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68">The ZeeInvoices Team</p>
 
-<div style="margin-top:56px; padding-top: 32px; padding-bottom: 32px; border-top: 1px solid #D4D5D6"> <!-- bottom section -->
+    <div style="margin-top:56px; padding-top: 32px; padding-bottom: 32px; border-top: 1px solid #D4D5D6"> <!-- bottom section -->
 
-<p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A6899" class="center-on-small">You’re receiving this email because you signed up for ZeeInvoices. If you no longer wish to receive these emails, you can unsubscribe <span><a href="#" style="color: #4B5565">here</a></span>.</p>
+    <p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A6899" class="center-on-small">You’re receiving this email because you signed up for ZeeInvoices. If you no longer wish to receive these emails, you can unsubscribe <span><a href="#" style="color: #4B5565">here</a></span>.</p>
 
-<div style="width: 100%" class="flexContainer"> <!-- footer section -->
-<div class="displays center-on-small marginBottom" style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A6899">© 2024 ZeeInvoices. All rights reserved.</div>
-<p class="displays marginsContainer" style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68;"><span><a href="https://zeeinvoices.com/about-us" target="_blank" style="color: #4F35DF">support</a></span> | <span><a href="https://zeeinvoices.com/terms-and-condition" target="_blank" style="color: #4F35DF">terms & conditions</a></span></p>
-</div>
+    <div style="width: 100%" class="flexContainer"> <!-- footer section -->
+    <div class="displays center-on-small marginBottom" style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A6899">© 2024 ZeeInvoices. All rights reserved.</div>
+        <p class="displays marginsContainer" style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68;"><span><a href="https://zeeinvoices.com/about-us" target="_blank" style="color: #4F35DF">support</a></span> | <span><a href="https://zeeinvoices.com/terms-and-condition" target="_blank" style="color: #4F35DF">terms & conditions</a></span></p>
+    </div>
 
-</div>
+    </div>
 
 <div style="width: 100%; margin-top:40px;" class="flexContainer"> <!-- footer section -->
-<img class="image-footer displays" style="height: 24px" src="https://zeeinvoices.com/Images/logos/zee-logo.png" alt="zeeinvoices">
+<img class="image-footer displays" style="height: 24px; width: 174px" src="https://zeeinvoices.com/Images/logos/main-logo-hr.png" alt="zeeinvoices">
 <div class="displays marginsContainer"> <!-- social links -->
 <a  href="https://www.facebook.com/zeeinvoices/" target="_blank" rel="noopener noreferrer" style="text-decoration:none; margin-left: 12px"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/facebook-et-icon.png" alt="f"></a>
 <a  href="https://www.instagram.com/zeeinvoices/" target="_blank" rel="noopener noreferrer" style="text-decoration:none; margin-left: 12px"><img style="height:20px; width:20px" src="https://zeeinvoices.com/Images/icons/instagram-et-icon.png" alt="i"></a>

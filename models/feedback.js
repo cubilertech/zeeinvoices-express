@@ -11,6 +11,10 @@ const feedbackSchema = new mongoose.Schema({
         required: 'Feedback is required',
         allowNull: false
     },
+    email: {
+        type: String,
+        allowNull: true
+    }
 },{
     timestamps: true
 });

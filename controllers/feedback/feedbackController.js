@@ -2,7 +2,7 @@ const Service = require("../../services/feedback/index");
 
 exports.submitFeedback = async (req, res) => {
     try {
-        const {rating, feedback} = req.body;
+        const {rating, feedback, email} = req.body;
         if (!rating || rating === '') {
             return res.status(400).json({error: true, message: 'Rating is required'});
         }
@@ -11,7 +11,7 @@ exports.submitFeedback = async (req, res) => {
             return res.status(400).json({error: true, message: 'Feedback is required'});
         }
 
-        const feedbackRecord = await Service.create({rating, feedback});
+        const feedbackRecord = await Service.create({rating, feedback, email: email ? email : null});
 
         console.log("Feedback record", feedbackRecord);
 
