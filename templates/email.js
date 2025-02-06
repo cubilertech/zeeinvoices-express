@@ -274,5 +274,40 @@ password reset, please ignore this email or reach out to our support team if you
 </p>
 
   ${emailFooter()}
+    <p style="font-family: Arial;font-size: 40px; line-height: 44px; font-weight:700; color: #4F5A68; margin-top: 72px;">
+        Feedback Submitted by User
+    </p>
+    
+    <p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68; margin: 0;">
+        Rating: </br>
+    </p>
+  `
+}
+
+exports.feedbackEmail = (rating, feedback) => {
+  const ratingIcons = {
+    Excellent: "https://dev-backend.zeeinvoices.com/public/feedback/excellent.svg",
+    "Very Good": "https://dev-backend.zeeinvoices.com/public/feedback/v-good.svg",
+    Good: "https://dev-backend.zeeinvoices.com/public/feedback/good.svg",
+    Normal: "https://dev-backend.zeeinvoices.com/public/feedback/normal.svg",
+    Poor: "https://dev-backend.zeeinvoices.com/public/feedback/poor.svg",
+  };
+
+  const ratingIcon = ratingIcons[rating] || "";
+
+  return `
+    ${emailHeader()}
+      <p style="font-family: Arial;font-size: 40px; line-height: 44px; font-weight:700; color: #4F5A68; margin-top: 72px;">
+      Feedback Received
+      </p>
+      <p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68; margin: 0;">
+        <strong>Rating:</strong> ${rating}
+      </p>
+      ${ratingIcon ? `<img src="${ratingIcon}" alt="${rating}" width="50" height="50" style="margin-top: 10px;"/>` : ""}
+      <p style="font-family: Arial;font-size: 16px; line-height: 24px; font-weight:400; color: #4F5A68; margin: 0;">
+      <strong>Feedback:</strong> 
+       ${feedback || "No additional comments provided."}
+      </p>
+    ${emailFooter()}
   `
 }

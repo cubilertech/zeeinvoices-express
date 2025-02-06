@@ -15,9 +15,9 @@ const transporter = nodemailer.createTransport({
 });
 
 class NodemailerService {
-  static sendEmail(to, subject, html = "<p>Hi</p>", text = "", from = "Developer") {
+  static sendEmail(to, subject, html = "<p>Hi</p>", text = "", from) {
     const messageData = {
-      from: `zeeinvoiceswebsite <Info@ZeeInvoices.com>`,
+      from: from,
       to: to,
       subject: subject,
       html: html,

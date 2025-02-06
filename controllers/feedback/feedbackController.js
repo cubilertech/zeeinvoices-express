@@ -1,4 +1,6 @@
 const Service = require("../../services/feedback/index");
+const {accountCreatedTemplate, feedbackEmail} = require("../../templates/email");
+const NodemailerService = require("../../services/nodemailer");
 
 exports.submitFeedback = async (req, res) => {
     try {
@@ -7,13 +9,21 @@ exports.submitFeedback = async (req, res) => {
             return res.status(400).json({error: true, message: 'Rating is required'});
         }
 
-        if (!feedback || feedback === '') {
+        if (!email || email === '') {
             return res.status(400).json({error: true, message: 'Feedback is required'});
         }
 
         const feedbackRecord = await Service.create({rating, feedback, email: email ? email : null});
 
-        console.log("Feedback record", feedbackRecord);
+        const html = feedbackEmail(rating, feedback);
+
+        await NodemailerService.sendEmail(
+            email,
+            "User Feedback!",
+            html,
+            "",
+            email
+        );
 
         if (feedbackRecord) {
             res.status(200).json({error: false, message: "Feedback submitted successfully"});
