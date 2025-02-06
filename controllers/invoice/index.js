@@ -12,6 +12,7 @@ const InvoiceService = require("../../services/invoice");
 // const SendGridService = require("../../services/sendGrid");
 const NodemailerService = require("../../services/nodemailer");
 const path = require('path');
+const fs = require("fs");
 
 exports.getAll = async (req, res) => {
   const user = req.user;
@@ -23,12 +24,12 @@ exports.getAll = async (req, res) => {
       throw new Error("Invalid user.");
     }
     const result = await Service.findAllWithPipeline(
-      { user_id: userFound?._id },
-      search,
-      {
-        skip,
-        limit: Number(limit),
-      }
+        { user_id: userFound?._id },
+        search,
+        {
+          skip,
+          limit: Number(limit),
+        }
     );
     const total = await Service.count({ user_id: userFound?._id });
     handleResponse(res, 200, "All Records", { ...result, total });
@@ -58,12 +59,12 @@ exports.getInvoicesByClient = async (req, res) => {
       throw new Error("ID is required");
     }
     const records = await Service.findAllWithPipeline(
-      { to: new mongoose.Types.ObjectId(id) },
-      search,
-      {
-        skip,
-        limit: Number(limit),
-      }
+        { to: new mongoose.Types.ObjectId(id) },
+        search,
+        {
+          skip,
+          limit: Number(limit),
+        }
     );
     handleResponse(res, 200, "All Records", records);
   } catch (err) {
@@ -79,12 +80,12 @@ exports.getInvoicesBySender = async (req, res) => {
       throw new Error("ID is required");
     }
     const records = await Service.findAllWithPipeline(
-      { from: new mongoose.Types.ObjectId(id) },
-      search,
-      {
-        skip,
-        limit: Number(limit),
-      }
+        { from: new mongoose.Types.ObjectId(id) },
+        search,
+        {
+          skip,
+          limit: Number(limit),
+        }
     );
     handleResponse(res, 200, "All Records", records);
   } catch (err) {
@@ -113,9 +114,9 @@ exports.update = async (req, res) => {
     if (data?.from) {
       const newFrom = JSON.parse(data?.from);
       const resp = await addOrUpdateInvoiceSenderOrReceipient(
-        newFrom,
-        SenderService,
-        oldRecord.user_id
+          newFrom,
+          SenderService,
+          oldRecord.user_id
       );
       data.from = resp.ref;
       data.fromDetails = resp.detail;
@@ -123,9 +124,9 @@ exports.update = async (req, res) => {
     if (data?.to) {
       const newTo = JSON.parse(data?.to);
       const resp = await addOrUpdateInvoiceSenderOrReceipient(
-        newTo,
-        ClientService,
-        oldRecord.user_id
+          newTo,
+          ClientService,
+          oldRecord.user_id
       );
       data.to = resp.ref;
       data.toDetails = resp.detail;
@@ -134,19 +135,19 @@ exports.update = async (req, res) => {
     if (req.files && req.files['image'] && req.files['image'][0]) {
       const filePath = req.files['image'][0].path;
       data.image = await addOrUpdateOrDelete(
-        multerActions.PUT,
-        multerSource.INVOICES,
-        path.basename(filePath),
-        oldRecord.image
+          multerActions.PUT,
+          multerSource.INVOICES,
+          path.basename(filePath),
+          oldRecord.image
       );
     }
     if (data?.image === "no-image") {
       if (oldRecord?.image) {
         console.log("only remove image");
         await addOrUpdateOrDelete(
-          multerActions.DELETE,
-          multerSource.INVOICES,
-          oldRecord.image
+            multerActions.DELETE,
+            multerSource.INVOICES,
+            oldRecord.image
         );
       }
       data.image = "";
@@ -155,19 +156,19 @@ exports.update = async (req, res) => {
     if (req.files && req.files['signatureImage'] && req.files['signatureImage'][0]) {
       const filePath = req.files['signatureImage'][0].path;
       data.signature.image = await addOrUpdateOrDelete(
-        multerActions.PUT,
-        multerSource.INVOICES,
-        path.basename(filePath),
-        oldRecord?.signature?.image
+          multerActions.PUT,
+          multerSource.INVOICES,
+          path.basename(filePath),
+          oldRecord?.signature?.image
       );
     }
     if (data?.signatureImage === "no-image") {
       if (oldRecord?.signature?.image) {
         console.log("only remove image");
         await addOrUpdateOrDelete(
-          multerActions.DELETE,
-          multerSource.INVOICES,
-          oldRecord?.signature?.image
+            multerActions.DELETE,
+            multerSource.INVOICES,
+            oldRecord?.signature?.image
         );
       }
       data.signature.image = "";
@@ -175,10 +176,10 @@ exports.update = async (req, res) => {
 
     const record = await Service.update({ _id: id }, data);
     handleResponse(
-      res,
-      200,
-      "Your Invoice has been updated successfully",
-      record
+        res,
+        200,
+        "Your Invoice has been updated successfully",
+        record
     );
   } catch (err) {
     if (err.code === 11000) {
@@ -194,29 +195,29 @@ exports.deleteSingle = async (req, res) => {
     const record = await Service.delete({ _id: id });
 
     if (
-      record &&
-      record.image &&
-      record.image?.startsWith("images/invoices/uploads")
+        record &&
+        record.image &&
+        record.image?.startsWith("images/invoices/uploads")
     ) {
       await addOrUpdateOrDelete(
-        multerActions.DELETE,
-        multerSource.INVOICES,
-        record.image
+          multerActions.DELETE,
+          multerSource.INVOICES,
+          record.image
       );
     }
     if(record && record?.signature?.image && record?.signature?.image?.startsWith("images/invoices/uploads")){
       await addOrUpdateOrDelete(
-        multerActions.DELETE,
-        multerSource.INVOICES,
-        record.signature.image
+          multerActions.DELETE,
+          multerSource.INVOICES,
+          record.signature.image
       );
     }
 
     handleResponse(
-      res,
-      200,
-      "Your Invoice has been deleted successfully",
-      record
+        res,
+        200,
+        "Your Invoice has been deleted successfully",
+        record
     );
   } catch (err) {
     handleError(res, err);
@@ -245,9 +246,9 @@ exports.create = async (req, res) => {
     if (data?.from) {
       const newFrom = JSON.parse(data?.from);
       const resp = await addOrUpdateInvoiceSenderOrReceipient(
-        newFrom,
-        SenderService,
-        userFound._id
+          newFrom,
+          SenderService,
+          userFound._id
       );
       data.from = resp.ref;
       data.fromDetails = resp.detail;
@@ -255,9 +256,9 @@ exports.create = async (req, res) => {
     if (data?.to) {
       const newTo = JSON.parse(data?.to);
       const resp = await addOrUpdateInvoiceSenderOrReceipient(
-        newTo,
-        ClientService,
-        userFound._id
+          newTo,
+          ClientService,
+          userFound._id
       );
       data.to = resp.ref;
       data.toDetails = resp.detail;
@@ -274,41 +275,41 @@ exports.create = async (req, res) => {
     // Check if `image` file exists
     if (req.files && req.files['image'] && req.files['image'][0]) {
       data.image = await addOrUpdateOrDelete(
-        multerActions.SAVE,
-        multerSource.INVOICES,
-        req.files['image'][0].path
+          multerActions.SAVE,
+          multerSource.INVOICES,
+          req.files['image'][0].path
       );
     }
 
     // Check if `signatureImage` file exists
     if (req.files && req.files['signatureImage'] && req.files['signatureImage'][0]) {
       signature.image = await addOrUpdateOrDelete(
-        multerActions.SAVE,
-        multerSource.INVOICES,
-        req.files['signatureImage'][0].path
+          multerActions.SAVE,
+          multerSource.INVOICES,
+          req.files['signatureImage'][0].path
       );
-    }   
+    }
 
     const record = await Service.create({ ...data,signature, user_id: userFound?._id });
 
-      // const senderTemplate = emailInvoiceToSender(data.fromDetails);
-      // await NodemailerService.sendEmail(
-      //   data.fromDetails.email,
-      //   "Your Invoice Has Been Created",
-      //   senderTemplate,
-      // );
-      // const recepientTemplate = emailInvoiceToClient(data.fromDetails,data.toDetails,{id:data.id,total:invoiceTotal});
-      // await NodemailerService.sendEmail(
-      //   data.toDetails.email,
-      //   `You've Received an Invoice from ${data.fromDetails?.name}`,
-      //   recepientTemplate,
-      // );
+    // const senderTemplate = emailInvoiceToSender(data.fromDetails);
+    // await NodemailerService.sendEmail(
+    //   data.fromDetails.email,
+    //   "Your Invoice Has Been Created",
+    //   senderTemplate,
+    // );
+    // const recepientTemplate = emailInvoiceToClient(data.fromDetails,data.toDetails,{id:data.id,total:invoiceTotal});
+    // await NodemailerService.sendEmail(
+    //   data.toDetails.email,
+    //   `You've Received an Invoice from ${data.fromDetails?.name}`,
+    //   recepientTemplate,
+    // );
 
     handleResponse(
-      res,
-      200,
-      "Your Invoice has been saved successfully",
-      record
+        res,
+        200,
+        "Your Invoice has been saved successfully",
+        record
     );
   } catch (err) {
     console.log("code error",err);
@@ -354,8 +355,8 @@ exports.getNewInvoiceId = async (req, res) => {
     });
     if (invoicesExist?.length > 0) {
       const newInvoiceId = await generateUniqueInvoiceId(
-        invoicesExist[0]?.id,
-        userFound?._id
+          invoicesExist[0]?.id,
+          userFound?._id
       );
       return handleResponse(res, 200, "Invoice ID", newInvoiceId);
     }
@@ -426,21 +427,21 @@ const addOrUpdateInvoiceSenderOrReceipient = async (data, Service, userId) => {
 // };
 
 exports.modifyExistingDocuments = async (req,res)=>{
-  try{ 
-   const result = await Service.updateMany(
-     { 
-      signature: { $exists: false },
-     },
-     { 
-        $set: { 
-           signature: null 
+  try{
+    const result = await Service.updateMany(
+        {
+          signature: { $exists: false },
+        },
+        {
+          $set: {
+            signature: null
+          }
         }
-     }
-  );
-   handleResponse(res,200,"Records modified",result);
+    );
+    handleResponse(res,200,"Records modified",result);
   }
   catch(err){
-   handleError(res,err);
+    handleError(res,err);
   }
 }
 
@@ -474,3 +475,64 @@ exports.changeStatus = async (req, res) => {
     })
   }
 };
+
+exports.duplicateInvoice = async (req, res) => {
+  try {
+    const {id} = req.params;
+    const {_id : user_id} = req.user;
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id) || id.length !== 24) {
+      return res.status(400).json({error: true, message: "Invalid invoice ID"});
+    }
+
+    if (!user_id || !mongoose.Types.ObjectId.isValid(user_id) || user_id.length !== 24) {
+      return res.status(400).json({error: true, message: "Invalid user ID"});
+    }
+
+    const invoice = await Service.findBy({_id: id});
+
+    if (!invoice) {
+      return res.status(404).json({error: true, message: "Invoice not found"});
+    }
+
+    const newInvoiceId = await generateUniqueInvoiceId(invoice.id, user_id);
+    // console.log("New InvoiceId", newInvoiceId);
+    //
+    // console.log("Invoice", invoice);
+
+    let newImagePath = "";
+    if (invoice.image && invoice.image !== "") {
+      const oldImagePath = `public/${invoice.image}`;
+      if (fs.existsSync(oldImagePath)) {
+        const ext = path.extname(invoice.image);
+        const newFileName = `${Date.now()}_${path.basename(invoice.image, ext)}${ext}`;
+        const newFilePath = `public/images/invoices/uploads/${newFileName}`;
+
+        // Copy the existing image to the new file path
+        fs.copyFileSync(oldImagePath, newFilePath);
+
+        // Use multer's function to handle the new image path
+        newImagePath = await addOrUpdateOrDelete(multerActions.SAVE, "invoices", newFilePath);
+      }
+    }
+
+    const newInvoiceData = {
+      ...invoice.toObject(),
+      id: newInvoiceId,
+      image: newImagePath
+    };
+    delete newInvoiceData._id;
+
+    const newInvoice = await Service.create(newInvoiceData);
+
+    if (newInvoice) {
+      res.status(200).json({error: false, message: "Invoice duplicated successfully"});
+    } else {
+      res.status(500).json({error: true, message: "Failed to duplicate invoice"});
+    }
+    // const newInvoice = await Service.create();
+  } catch (err) {
+    console.log("Error", err);
+    res.status(500).json({error: true, message: "Server Error"})
+  }
+}

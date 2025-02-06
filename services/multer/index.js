@@ -36,12 +36,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-const addOrUpdateOrDelete = async (
-  action,
-  source,
-  newFilePath,
-  oldFilePath = ""
-) => {
+const addOrUpdateOrDelete = async (action, source, newFilePath, oldFilePath = "") => {
   return new Promise((resolve, reject) => {
     try {
       switch (action) {

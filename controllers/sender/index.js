@@ -102,11 +102,15 @@ exports.create = async (req, res) => {
   const data = { ...req.body };
   try {
     const userFound = await UserService.findBy({ email: user?.email });
+
     if (!userFound) {
-      throw new Error("Invalid Loggedin user.");
+      throw new Error("Invalid Logged in user.");
     }
+
     const record = await Service.create({ ...data, user_id: userFound?._id });
+
     handleResponse(res, 200, "Sender Added Successfully", record);
+
   } catch (err) {
     if (err.code === 11000) {
       err.message = "Another sender already exists with the same email.";
