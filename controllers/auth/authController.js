@@ -83,7 +83,7 @@ exports.confirmUserCredentials = async (req, res) => {
 
             } else {
                 const currentTime = new Date();
-                recordFound = await Service.update({_id:recordFound?._id},{
+                recordFound = await Service.update({_id: recordFound?._id},{
                     lastLogin:currentTime,
                     image: userData?.data?.picture,
                     name: userData?.data?.name
