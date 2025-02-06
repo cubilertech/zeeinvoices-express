@@ -1,5 +1,5 @@
 const Service = require("../../services/feedback/index");
-const {accountCreatedTemplate, feedbackEmail} = require("../../templates/email");
+const {feedbackEmail} = require("../../templates/email");
 const NodemailerService = require("../../services/nodemailer");
 
 exports.submitFeedback = async (req, res) => {
@@ -18,7 +18,7 @@ exports.submitFeedback = async (req, res) => {
         const html = feedbackEmail(rating, feedback);
 
         await NodemailerService.sendEmail(
-            email,
+            "support@zeeinvoices.com",
             "User Feedback!",
             html,
             "",
