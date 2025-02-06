@@ -286,11 +286,11 @@ password reset, please ignore this email or reach out to our support team if you
 
 exports.feedbackEmail = (rating, feedback) => {
   const ratingIcons = {
-    Excellent: "https://dev-backend.zeeinvoices.com/public/feedback/excellent.svg",
-    "Very Good": "https://dev-backend.zeeinvoices.com/public/feedback/v-good.svg",
-    Good: "https://dev-backend.zeeinvoices.com/public/feedback/good.svg",
-    Normal: "https://dev-backend.zeeinvoices.com/public/feedback/normal.svg",
-    Poor: "https://dev-backend.zeeinvoices.com/public/feedback/poor.svg",
+    Excellent: "https://dev-backend.zeeinvoices.com/public/feedback/excellent.png",
+    "Very Good": "https://dev-backend.zeeinvoices.com/public/feedback/v-good.png",
+    Good: "https://dev-backend.zeeinvoices.com/public/feedback/good.png",
+    Normal: "https://dev-backend.zeeinvoices.com/public/feedback/normal.png",
+    Poor: "https://dev-backend.zeeinvoices.com/public/feedback/poor.png",
   };
 
   const ratingIcon = ratingIcons[rating] || "";
