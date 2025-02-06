@@ -18,7 +18,7 @@ exports.submitFeedback = async (req, res) => {
         const html = feedbackEmail(rating, feedback);
 
         await NodemailerService.sendEmail(
-            "support@zeeinvoices.com",
+            email,
             "User Feedback!",
             html,
             "",
